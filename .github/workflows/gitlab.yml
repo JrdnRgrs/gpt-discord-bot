@@ -8,9 +8,9 @@ on:
       - 'package.json'
 
 jobs:
-  to_gitlab:
+  push_image:
     runs-on: ubuntu-latest
-    steps:                                              # <-- must use actions/checkout before mirroring!
+    steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
