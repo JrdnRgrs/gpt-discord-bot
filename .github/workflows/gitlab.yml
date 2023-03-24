@@ -26,8 +26,8 @@ jobs:
         name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
-          registry: registry.gitlab.com
-          username: ${{ secrets.TARGET_USERNAME }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
           password: ${{ secrets.TARGET_TOKEN }}
       -
         name: Build and push
@@ -36,4 +36,4 @@ jobs:
           context: .
           platforms: linux/arm64
           push: true
-          tags: registry.gitlab.com/jrdnrgrs/gpt-discord-bot/gpt-discord-bot:${{ github.ref_slug }}
+          tags: ghcr.io/jrdnrgrs/gpt-discord-bot:${{ github.ref_slug }}
