@@ -10,12 +10,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: pixta-dev/repository-mirroring-action@v1
-        with:
-          target_repo_url:
-            git@gitlab.com:jrdnrgrs/gpt-discord-bot.git
-          ssh_private_key:                              # <-- use 'secrets' to pass credential information.
-            ${{ secrets.GITLAB_SSH_PRIVATE_KEY }}
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
