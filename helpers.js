@@ -3,7 +3,7 @@ const { BASE_URL, REPLY_MODE, SESSION_ID, ADMIN_ID} = require('./constants');
 const { config, createAudioFromText } = require('tiktok-tts');
 //const BASE_URL = process.env.BASE_URL;
 config(SESSION_ID, BASE_URL);
-const { EmbedBuilder, PermissionFlagsBits } = require('discord.js');
+const { PermissionFlagsBits } = require('discord.js');
 // Require ffmpeg, fs, path, child_process for working with audio files
 const fs = require('fs');
 const path = require('path');
@@ -126,58 +126,6 @@ async function textToSpeech(speaker, text) {
     }
 }
 
-// merge voice names if multiple numbers. Outputs like us_male1,2,3,4
-function groupVoiceDescriptions(voiceDescriptions) {
-    const grouped = {};
-    const regex = /^(.*\D)(\d+)$/;
-
-    for (const key in voiceDescriptions) {
-        const match = key.match(regex);
-        if (match) {
-            const prefix = match[1];
-            const number = match[2];
-
-            if (grouped[prefix]) {
-                grouped[prefix].push(number);
-            } else {
-                grouped[prefix] = [number];
-            }
-        } else {
-            grouped[key] = voiceDescriptions[key];
-        }
-    }
-
-    const newVoiceDescriptions = {};
-    for (const key in grouped) {
-        if (Array.isArray(grouped[key])) {
-            const newKey = `${key}${grouped[key].join('_')}`;
-            newVoiceDescriptions[newKey] = voiceDescriptions[`${key}${grouped[key][0]}`];
-        } else {
-            newVoiceDescriptions[key] = grouped[key];
-        }
-    }
-
-    return newVoiceDescriptions;
-}
-
-// Create a discord embed for the voice descriptions (!speakers command)
-function voiceEmbed(voiceDescriptions, title) {
-	const formattedDescriptions = groupVoiceDescriptions(voiceDescriptions);
-	// create an embed object
-	let voiceEmbed = new EmbedBuilder()
-		.setColor(0x0099FF) // set the color of the embed
-		.setTitle(title) // set the title of the embed
-		.setDescription('Here are the '+ title +' you can use'); // set the description of the embed
-
-	// loop through your voiceDescriptions object and add fields to the embed
-	for (let key in formattedDescriptions) {
-		const formattedKey = key.replace(/(\d)_/g, '$1,');
-		voiceEmbed.addFields({ name: formattedKey, value: formattedDescriptions[key], inline: true });
-	}
-
-	return voiceEmbed;
-}
-
 module.exports = {
     isAdmin,
     splitMessage,
@@ -185,7 +133,5 @@ module.exports = {
     mergeAudioFiles,
     textToSpeech,
     formatDate,
-    callOpenAIWithRetry,
-    groupVoiceDescriptions,
-    voiceEmbed
+    callOpenAIWithRetry
   };
