@@ -2,6 +2,10 @@ name: ci
 
 on:
   push:
+    paths:
+      - 'Dockerfile'
+      - 'index.js'
+      - 'package.json'
 
 jobs:
   to_gitlab:
