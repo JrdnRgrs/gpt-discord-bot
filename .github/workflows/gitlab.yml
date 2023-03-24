@@ -1,6 +1,11 @@
-name: Mirroring
+name: ci
 
-on: [push, delete]
+on:
+  push:
+    paths:
+      - 'Dockerfile'
+      - 'index.js'
+      - 'package.json'
 
 jobs:
   to_gitlab:
@@ -9,9 +14,24 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: pixta-dev/repository-mirroring-action@v1
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v2
         with:
-          target_repo_url:
-            git@gitlab.com:jrdnrgrs/gpt-discord-bot.git
-          ssh_private_key:                              # <-- use 'secrets' to pass credential information.
-            ${{ secrets.GITLAB_SSH_PRIVATE_KEY }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.TARGET_TOKEN }}
+      -
+        name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          platforms: linux/arm64
+          push: true
+          tags: ghcr.io/jrdnrgrs/gpt-discord-bot:latest
