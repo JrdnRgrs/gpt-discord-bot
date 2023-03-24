@@ -36,4 +36,4 @@ jobs:
           context: .
           platforms: linux/arm64
           push: true
-          tags: registry.gitlab.com/jrdnrgrs/gpt-discord-bot:${{ github.ref_slug }}
+          tags: registry.gitlab.com/jrdnrgrs/gpt-discord-bot/gpt-discord-bot:${{ github.ref_slug }}
