@@ -402,26 +402,28 @@ client.on('messageCreate', async msg => {
 	if (msg.content === botCommand + 'personalities') {
 		// Check disabled status
 		if (client.isPaused === true && !isAdmin(msg)) {
-			sendCmdResp(msg, process.env.DISABLED_MSG);
-			return;
+		  sendCmdResp(msg, process.env.DISABLED_MSG);
+		  return;
 		}
 		// Create an embed object
 		let persEmbed = new EmbedBuilder()
-			.setColor(0x0099FF) // set the color of the embed
-			.setTitle(process.env.PERSONALITY_MSG) // set the title of the embed
-			.setDescription('Here are some personalities and their prompts'); // set the description of the embed
-	
+		  .setColor(0x0099FF) // set the color of the embed
+		  .setTitle(process.env.PERSONALITY_MSG) // set the title of the embed
+		  .setDescription('Here are some personalities and their prompts'); // set the description of the embed
+	  
 		// Add personality names and prompts to fields
 		for (let i = 0; i < personalities.length; i++) {
-			let thisPersonality = personalities[i];
-			// Truncate the prompt to 1024 characters if it's longer than that
-			let truncatedPrompt = thisPersonality.prompt.substring(0, 1024);
-			persEmbed.addFields({ name: thisPersonality.name, value: truncatedPrompt });
+		  let thisPersonality = personalities[i];
+		  // Find the prompt from the request array
+		  let prompt = thisPersonality.request.find(item => item.role === 'system').content;
+		  // Truncate the prompt to 1024 characters if it's longer than that
+		  let truncatedPrompt = prompt.substring(0, 1024);
+		  persEmbed.addFields({ name: thisPersonality.name, value: truncatedPrompt });
 		}
-	
+	  
 		// Send the embed
-		sendCmdResp(msg,{embeds:[persEmbed]});
-	}
+		sendCmdResp(msg, { embeds: [persEmbed] });
+	  }
 
 	if (msg.content.startsWith(botCommand + 'say')) {
 		const input = msg.content.split(' ').slice(1);
