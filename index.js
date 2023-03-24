@@ -370,7 +370,7 @@ client.on('messageCreate', async msg => {
 
     // Reset bot command
 	if (msg.content.startsWith(botCommand + 'reset')) {
-        // Check disabled status
+		// Check disabled status
 		if (client.isPaused === true && !isAdmin(msg)) {
 			sendCmdResp(msg, process.env.DISABLED_MSG);
 			return;
@@ -386,7 +386,8 @@ client.on('messageCreate', async msg => {
 			for (let i = 0; i < personalities.length; i++) {
 				let thisPersonality = personalities[i];
 				if (cutMsg.toUpperCase().startsWith(thisPersonality.name.toUpperCase())) {
-					personalities[i] = { "name": thisPersonality.name, "request" : [{"role": "system", "content": `${process.env["personality." + thisPersonality.name]}`}]};
+					let originalSystemMessage = thisPersonality.request.find(msg => msg.role === 'system');
+					personalities[i] = { "name": thisPersonality.name, "request" : [originalSystemMessage]};
 					sendCmdResp(msg, process.env.DYNAMIC_RESET_MSG.replace('<p>', thisPersonality.name));
 					return;
 				}
