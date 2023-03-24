@@ -1,9 +1,7 @@
 version: "3.8"
 services:
   gpt-bot:
-    image: gpt-discord-bot
+    image: ghcr.io/jrdnrgrs/gpt-discord-bot:latest
     restart: always
     volumes:
-      - .env:/app/.env:ro
-    environment:
-      - personality_assistant=You are a helpful assistant.
+      - /.env:/app/.env:ro
