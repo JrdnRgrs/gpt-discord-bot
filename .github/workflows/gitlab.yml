@@ -16,10 +16,6 @@ jobs:
             git@gitlab.com:jrdnrgrs/gpt-discord-bot.git
           ssh_private_key:                              # <-- use 'secrets' to pass credential information.
             ${{ secrets.GITLAB_SSH_PRIVATE_KEY }}
-      - name: Extract branch name
-        shell: bash
-        run: echo "branch=$(echo ${GITHUB_REF#refs/heads/} | tr '/' '-')" >> $GITHUB_ENV
-        id: extract_branch
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -40,6 +36,4 @@ jobs:
           context: .
           platforms: linux/arm64
           push: true
-          tags: |
-            ghcr.io/jrdnrgrs/gpt-discord-bot:${{ steps.extract_branch.outputs.branch }}
-            ghcr.io/jrdnrgrs/gpt-discord-bot:latest
+          tags: ghcr.io/jrdnrgrs/gpt-discord-bot:latest
