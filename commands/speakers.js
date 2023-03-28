@@ -1,5 +1,6 @@
+// Requre the necessary discord.js classes
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 const { DISABLED_MSG, voiceDescriptions, ne_voiceDescriptions } = require('../constants');
-const { sendCmdResp, isAdmin } = require('../helpers');
 const { EmbedBuilder } = require('discord.js');
 
 // merge voice names if multiple numbers. Outputs like us_male1,2,3,4
@@ -54,20 +55,34 @@ function voiceEmbed(voiceDescriptions, title) {
 	return voiceEmbed;
 }
 
-module.exports = function speakers(msg, client) {
-    // Check disabled status
-    if (client.isPaused === true && !isAdmin(msg)) {
-        sendCmdResp(msg, DISABLED_MSG);
-        return;
-    }
-    const [, ne_voices] = msg.content.split(' ')
-    let voiceEmbed_en = voiceEmbed(voiceDescriptions, 'English Speakers')
-    // send the embed to the channel
-    sendCmdResp(msg, { embeds: [voiceEmbed_en] });
+module.exports = {
+    data: new SlashCommandBuilder()
+        // Command details
+        .setName('speakers')
+        .setDescription('List of all the speakers you can use with TTS functions.')
+        .addStringOption(option =>
+            option.setName('language')
+            .setDescription('Specify "all" to display all voices, including non-English speakers.')
+            .setRequired(false)),
+    async execute(interaction, state) {
+        // Commands to execute
+        // Check admin/pause state
+        if (!interaction.member.permissions.has(PermissionFlagsBits.ManageMessages) && state.isPaused === true) {
+            await interaction.reply(DISABLED_MSG);
+            return;
+        }
 
-    if(ne_voices == "all"){
-        let voiceEmbed_ne = voiceEmbed(ne_voiceDescriptions, 'Non-English Speakers')
-        // send the embed to the channel
-        sendCmdResp(msg, { embeds: [voiceEmbed_ne] });
-    }
-}
+        // Get the 'language' option value
+        const languageOption = interaction.options.getString('language') || '';
+
+        // Create and send English speakers embed
+        let voiceEmbed_en = voiceEmbed(voiceDescriptions, 'English Speakers');
+        await interaction.reply({ embeds: [voiceEmbed_en] });
+
+        // If 'language' option is 'all', create and send Non-English speakers embed
+        if (languageOption.toLowerCase() === 'all') {
+            let voiceEmbed_ne = voiceEmbed(ne_voiceDescriptions, 'Non-English Speakers');
+            interaction.followUp({ embeds: [voiceEmbed_ne] });
+        }
+    },
+};

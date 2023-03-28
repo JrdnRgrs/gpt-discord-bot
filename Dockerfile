@@ -7,7 +7,8 @@ COPY index.js .
 COPY helpers.js .
 COPY constants.js .
 COPY ./voices/ .
-COPY ./commands/ .
+RUN mkdir commands
+COPY ./commands/*.js commands/
 
 RUN npm ci
 

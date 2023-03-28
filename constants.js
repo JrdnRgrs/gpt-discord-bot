@@ -2,6 +2,7 @@ require('dotenv').config();
 // Voice mappings
 const voiceMapping = {
 	default: 'en_us_rocket',
+    rocket: 'en_us_rocket',
     au_female: 'en_au_001',
     au_male: 'en_au_002',
     uk_male1: 'en_uk_001',
@@ -30,7 +31,6 @@ const voiceMapping = {
     c3po: 'en_us_c3po',
     stitch: 'en_us_stitch',
     stormtrooper: 'en_us_stormtrooper',
-    rocket: 'en_us_rocket',
     fr_male1: 'fr_001',
     fr_male2: 'fr_002',
     de_female: 'de_001',
