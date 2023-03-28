@@ -1,14 +1,30 @@
+// Requre the necessary discord.js classes
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 const { sendCmdResp, isAdmin } = require('../helpers');
 const { PERSONALITY_MSG, DISABLED_MSG } = require('../constants');
 const { EmbedBuilder } = require('discord.js');
 
 
-module.exports = function personalitiesCommand(msg, client, personalities) {
-    // Check disabled status
-    if (client.isPaused === true && !isAdmin(msg)) {
-            sendCmdResp(msg, DISABLED_MSG);
+module.exports = {
+    data: new SlashCommandBuilder()
+        // Command details
+        .setName('personalities')
+        .setDescription('List the name of all personalities.'),
+    async execute(interaction, state) {
+        // Commands to execute
+        // Check admin/pause state
+        if (!interaction.member.permissions.has(PermissionFlagsBits.ManageMessages) && state.isPaused === true) {
+            await interaction.reply(DISABLED_MSG);
             return;
         }
+        // Create message variable
+		// persMsg = PERSONALITY_MSG + "\n";
+		// // Add personality names to variable
+		// for (let i = 0; i < state.personalities.length; i++) {
+		// 	let thisPersonality = state.personalities[i];
+		// 	persMsg += "- " + thisPersonality.name + "\n"
+		// }
+
         // Create an embed object
         let persEmbed = new EmbedBuilder()
             .setColor(0x0099FF) // set the color of the embed
@@ -16,15 +32,17 @@ module.exports = function personalitiesCommand(msg, client, personalities) {
             .setDescription('Here are some personalities and their prompts'); // set the description of the embed
         
         // Add personality names and prompts to fields
-        for (let i = 0; i < personalities.length; i++) {
-            let thisPersonality = personalities[i];
+        for (let i = 0; i < state.personalities.length; i++) {
+            let thisPersonality = state.personalities[i];
             // Find the prompt from the request array
             let prompt = thisPersonality.request.find(item => item.role === 'system').content;
             // Truncate the prompt to 1024 characters if it's longer than that
             let truncatedPrompt = prompt.substring(0, 1024);
             persEmbed.addFields({ name: thisPersonality.name, value: truncatedPrompt });
         }
-    
-        // Send the embed
-        sendCmdResp(msg, { embeds: [persEmbed] });
-}
+		// Send variable
+		//interaction.reply(persMsg);
+        interaction.reply({ embeds: [persEmbed] });
+        
+    },
+};

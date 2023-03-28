@@ -1,3 +1,4 @@
+// Global functions file
 const { BASE_URL, REPLY_MODE, SESSION_ID, ADMIN_ID} = require('./constants');
 // Require TikTok TTS package and store sessionID and URL
 const { config, createAudioFromText } = require('tiktok-tts');
@@ -15,11 +16,31 @@ const { exec } = require('child_process');
 const adminId = ADMIN_ID.split(',');
 // Check message author id function
 function isAdmin(msg) {
-	if (msg.member.permissions.has(PermissionFlagsBits.Administrator) || msg.member.permissions.has(PermissionFlagsBits.ManageMessages)) {
+	//if (msg.member.permissions.has(PermissionFlagsBits.Administrator) || msg.member.permissions.has(PermissionFlagsBits.ManageMessages)) {
+    if (interaction.member.permissions.has(PermissionFlagsBits.Administrator) || interaction.member.permissions.has(PermissionFlagsBits.ManageMessages)) {
 		return true;
 	} else {
 		return adminId.includes(msg.author.id);
 	}
+}
+
+// Initialize personalities function
+function initPersonalities(personalities, env) {
+	let envKeys = Object.keys(env);
+	// For each variable in .env check if starts with personality_ and add to personalities array if true
+	envKeys.forEach(element => {
+		if (element.startsWith('personality_')) {
+			name = element.slice(12);
+            personalities.push({ 
+                "name": name, 
+                "prompt": env[element],
+                "request": [{
+                    "role": "system",
+                    "content": `${env[element]}`
+                }]
+            });
+		}
+	});
 }
 
 // Split message function
@@ -133,5 +154,6 @@ module.exports = {
     mergeAudioFiles,
     textToSpeech,
     formatDate,
-    callOpenAIWithRetry
+    callOpenAIWithRetry,
+    initPersonalities: initPersonalities
   };
