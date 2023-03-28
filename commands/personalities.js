@@ -17,15 +17,7 @@ module.exports = {
             await interaction.reply(DISABLED_MSG);
             return;
         }
-        // Create message variable
-		// persMsg = PERSONALITY_MSG + "\n";
-		// // Add personality names to variable
-		// for (let i = 0; i < state.personalities.length; i++) {
-		// 	let thisPersonality = state.personalities[i];
-		// 	persMsg += "- " + thisPersonality.name + "\n"
-		// }
-
-        // Create an embed object
+         // Create an embed object
         let persEmbed = new EmbedBuilder()
             .setColor(0x0099FF) // set the color of the embed
             .setTitle(PERSONALITY_MSG) // set the title of the embed
