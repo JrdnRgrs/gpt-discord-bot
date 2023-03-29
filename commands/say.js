@@ -1,6 +1,6 @@
 // Requre the necessary discord.js classes
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
-const { sendCmdResp, isAdmin, textToSpeech,  } = require('../helpers');
+const { isAdmin, textToSpeech  } = require('../helpers');
 const { voiceMapping, DISABLED_MSG } = require('../constants');
 const fs = require('fs');
 
@@ -19,9 +19,9 @@ module.exports = {
                 .setDescription('Speaker key for the TTS voice (default is "rocket")')
                 .setRequired(false)
         ),
-    async execute(interaction, client) {
-        // Check disabled status
-        if (client.isPaused === true && !isAdmin(interaction)) {
+    async execute(interaction, state) {
+        // Check admin/pause state
+        if (!isAdmin(interaction) && state.isPaused === true) {
             await interaction.reply(DISABLED_MSG);
             return;
         }

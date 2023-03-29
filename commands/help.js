@@ -1,6 +1,7 @@
 // Requre the necessary discord.js classes
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 const { DISABLED_MSG, botCommand } = require('../constants');
+const { isAdmin } = require('../helpers');
 const { EmbedBuilder } = require('discord.js');
 
 module.exports = {
@@ -11,7 +12,7 @@ module.exports = {
     async execute(interaction, state) {
         // Commands to execute
         // Check admin/pause state
-        if (!interaction.member.permissions.has(PermissionFlagsBits.ManageMessages) && state.isPaused === true) {
+        if (!isAdmin(interaction) && state.isPaused === true) {
             await interaction.reply(DISABLED_MSG);
             return;
         }

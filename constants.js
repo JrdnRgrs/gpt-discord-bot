@@ -110,9 +110,10 @@ const SESSION_ID = process.env.SESSION_ID;
 const ADMIN_ID = process.env.ADMIN_ID;
 // Setup const defaults for non-sensitive env vars
 const modelName = process.env.GPT_MODEL ? process.env.GPT_MODEL : "gpt-3.5-turbo-0301";
-const botCommand = process.env.BOT_COMMAND ? process.env.BOT_COMMAND : "!";
+const botCommand = process.env.BOT_COMMAND ? process.env.BOT_COMMAND : "/";
 const BASE_URL = process.env.BASE_URL ? process.env.BASE_URL : 'https://api16-normal-c-useast1a.tiktokv.com/media/api/text/speech/invoke';
 const DISABLED_MSG = process.env.DISABLED_MSG ? process.env.DISABLED_MSG : "Sorry, I am disabled.";
+const DISABLED_REPLIES = process.env.DISABLED_REPLIES ? process.env.DISABLED_REPLIES : "true";
 const COMMAND_PERM_MSG = process.env.COMMAND_PERM_MSG ? process.env.COMMAND_PERM_MSG : "Sorry, you don't have the permissions to use that command.";
 const ENABLE_MSG = process.env.ENABLE_MSG ? process.env.ENABLE_MSG : "I am enabled.";
 const DISABLE_MSG = process.env.DISABLE_MSG ? process.env.DISABLE_MSG : "I am disabled";
@@ -123,6 +124,7 @@ const PERSONALITY_MSG = process.env.PERSONALITY_MSG ? process.env.PERSONALITY_MS
 const CASE_MODE = process.env.CASE_MODE ? process.env.CASE_MODE : "";
 const REPLY_MODE = process.env.REPLY_MODE ? process.env.REPLY_MODE : "false";
 const BOT_REPLIES = process.env.BOT_REPLIES ? process.env.BOT_REPLIES : "false";
+const API_ERROR_MSG = process.env.API_ERROR_MSG ? process.env.BOT_REPLIES : "API request failed.";
 
 module.exports = {
     voiceMapping,
@@ -143,5 +145,7 @@ module.exports = {
     REPLY_MODE,
     BOT_REPLIES,
     SESSION_ID,
-    ADMIN_ID
+    ADMIN_ID,
+    API_ERROR_MSG,
+    DISABLED_REPLIES
   };

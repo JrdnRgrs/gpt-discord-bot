@@ -2,6 +2,7 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 const { DISABLED_MSG, voiceDescriptions, ne_voiceDescriptions } = require('../constants');
 const { EmbedBuilder } = require('discord.js');
+const { isAdmin } = require('../helpers');
 
 // merge voice names if multiple numbers. Outputs like us_male1,2,3,4
 function groupVoiceDescriptions(voiceDescriptions) {
@@ -67,7 +68,7 @@ module.exports = {
     async execute(interaction, state) {
         // Commands to execute
         // Check admin/pause state
-        if (!interaction.member.permissions.has(PermissionFlagsBits.ManageMessages) && state.isPaused === true) {
+        if (!isAdmin(interaction) && state.isPaused === true) {
             await interaction.reply(DISABLED_MSG);
             return;
         }

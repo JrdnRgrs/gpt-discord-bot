@@ -7,7 +7,7 @@ const { Client, GatewayIntentBits, Events, Collection } = require('discord.js');
 require('dotenv').config();
 // Import functions and const
 const { isAdmin, splitMessage, sendCmdResp, formatDate, callOpenAIWithRetry, initPersonalities } = require('./helpers');
-const { modelName, botCommand, DISABLED_MSG, CASE_MODE, REPLY_MODE, BOT_REPLIES} = require('./constants');
+const { modelName, API_ERROR_MSG, DISABLED_MSG, CASE_MODE, REPLY_MODE, BOT_REPLIES, DISABLED_REPLIES} = require('./constants');
 
 // Require openai and set API key and setup
 const { Configuration, OpenAIApi } = require("openai");
@@ -38,14 +38,6 @@ for (const file of commandFiles) {
 // Console log when logged in
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
-  // Set the custom status
-  client.user.setPresence({
-    status: 'online', // You can show online, idle, dnd
-    activity: {
-      name: 'with the mobsters', // The message shown
-      type: 'PLAYING', // The type of activity
-    },
-  });
 });
 
 
@@ -107,7 +99,7 @@ client.on(Events.InteractionCreate, async interaction => {
 
 client.on('messageCreate', async msg => {
 	// Don't do anything when message is from self or bot depending on config
-	if (process.env.BOT_REPLIES === 'true') {
+	if (BOT_REPLIES === 'true') {
 		if (msg.author.id === client.user.id) return;
 	} else {
 		if (msg.author.bot) return;
@@ -127,9 +119,13 @@ client.on('messageCreate', async msg => {
 	if (p == null) return;
 
 	// Check if bot disabled/enabled
-	if (client.isPaused === true && !isAdmin(msg)) {
-		sendCmdResp(msg, DISABLED_MSG);
-		return;
+	if (state.isPaused === true && !isAdmin(null, msg)) {
+		if(DISABLED_REPLIES === "true"){
+			sendCmdResp(msg, DISABLED_MSG);
+			return;
+		} else {
+			return;
+		}
 	}
 
 	// Add user message to request
@@ -147,7 +143,7 @@ client.on('messageCreate', async msg => {
 		const responseChunks = splitMessage(response, 2000)
 		// Send the split API response
 		for (let i = 0; i < responseChunks.length; i++) {
-			if (process.env.REPLY_MODE === 'true' && i === 0) {
+			if (REPLY_MODE === 'true' && i === 0) {
 				msg.reply(responseChunks[i]);
 			} else {
 				msg.channel.send(responseChunks[i]);
@@ -191,7 +187,7 @@ async function chat(requestX){
 	} catch (error) {
 		//console.error('API request failed:', error);
 		console.error(`[${formatDate(new Date())}] [ERROR] OpenAI API request failed: ${error}`);
-		return process.env.API_ERROR_MSG;
+		return API_ERROR_MSG;
 	}
 }
 

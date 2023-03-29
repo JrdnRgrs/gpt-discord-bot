@@ -15,13 +15,21 @@ const { exec } = require('child_process');
 // Set admin user IDs
 const adminId = ADMIN_ID.split(',');
 // Check message author id function
-function isAdmin(msg) {
+function isAdmin(interaction, msg) {
 	//if (msg.member.permissions.has(PermissionFlagsBits.Administrator) || msg.member.permissions.has(PermissionFlagsBits.ManageMessages)) {
-    if (interaction.member.permissions.has(PermissionFlagsBits.Administrator) || interaction.member.permissions.has(PermissionFlagsBits.ManageMessages)) {
-		return true;
-	} else {
-		return adminId.includes(msg.author.id);
-	}
+    if (msg) {
+        if (msg.member.permissions.has(PermissionFlagsBits.Administrator) || msg.member.permissions.has(PermissionFlagsBits.ManageMessages)) {
+            return true;
+        } else {
+            return adminId.includes(msg.author.id);
+        }
+    } else if (interaction) {
+        if (interaction.member.permissions.has(PermissionFlagsBits.Administrator) || interaction.member.permissions.has(PermissionFlagsBits.ManageMessages)) {
+            return true;
+        } else {
+            return adminId.includes(interaction.user.id);
+        }
+    }
 }
 
 // Initialize personalities function

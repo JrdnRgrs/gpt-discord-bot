@@ -1,7 +1,7 @@
 // Require the necessary node classes
 const path = require('node:path');
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
-const { sendCmdResp, isAdmin, initPersonalities } = require('../helpers');
+const { isAdmin, initPersonalities } = require('../helpers');
 const { RESET_ERROR_MSG, RESET_MSG, DYNAMIC_RESET_MSG, DISABLED_MSG } = require('../constants');
 
 // Reset bot command
@@ -18,7 +18,7 @@ module.exports = {
     async execute(interaction, state) {
         // Commands to execute
         // Check admin/pause state
-        if (!interaction.member.permissions.has(PermissionFlagsBits.ManageMessages) && state.isPaused === true) {
+        if (!isAdmin(interaction) && state.isPaused === true) {
             await interaction.reply(DISABLED_MSG);
             return;
         }
