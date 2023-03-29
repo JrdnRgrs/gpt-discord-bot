@@ -31,7 +31,7 @@ module.exports = {
             for (let i = 0; i < state.personalities.length; i++) {
 				let thisPersonality = state.personalities[i];
 				if (interaction.options.getString('personality').toUpperCase().startsWith(thisPersonality.name.toUpperCase())) {
-					state.personalities[i] = { "name": thisPersonality.name, "request" : [{"role": "system", "content": `${process.env["personality." + thisPersonality.name]}`}]};
+					state.personalities[i] = { "name": thisPersonality.name, "request" : [{"role": "system", "content": `${process.env["personality_" + thisPersonality.name]}`}]};
 					await interaction.reply(DYNAMIC_RESET_MSG.replace('<p>', thisPersonality.name));
 					return;
 				}

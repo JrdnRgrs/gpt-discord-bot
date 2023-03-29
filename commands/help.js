@@ -31,6 +31,7 @@ module.exports = {
             { name: `${botCommand}say`, value: `Generates TTS for a bot message. With no input, uses the last message with \`rocket\`. Both arguments are optional. \n \`${botCommand}say [<number>,<messageID>] <speaker>\`` },
             { name: `${botCommand}speakers`, value: `Displays all TTS speakers available to the \`${botCommand}tts\` command.` },
             { name: `${botCommand}sample`, value:`Listen to samples of each available speaker to the \`${botCommand}tts\` command. \n \`${botCommand}sample <speaker>\``},
+            { name: `${botCommand}add-personality`, value:`Add a personality to the bot. \n \`${botCommand}add-personality <name> <prompt>\``},
             { name:`${botCommand}help`,value:'Displays this help message.'}
         );
         
