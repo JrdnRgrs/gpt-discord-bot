@@ -110,7 +110,6 @@ const SESSION_ID = process.env.SESSION_ID;
 const ADMIN_ID = process.env.ADMIN_ID;
 // Setup const defaults for non-sensitive env vars
 const modelName = process.env.GPT_MODEL ? process.env.GPT_MODEL : "gpt-3.5-turbo-0301";
-const botCommand = process.env.BOT_COMMAND ? process.env.BOT_COMMAND : "/";
 const BASE_URL = process.env.BASE_URL ? process.env.BASE_URL : 'https://api16-normal-c-useast1a.tiktokv.com/media/api/text/speech/invoke';
 const DISABLED_MSG = process.env.DISABLED_MSG ? process.env.DISABLED_MSG : "Sorry, I am disabled.";
 const DISABLED_REPLIES = process.env.DISABLED_REPLIES ? process.env.DISABLED_REPLIES : "true";
@@ -125,13 +124,14 @@ const CASE_MODE = process.env.CASE_MODE ? process.env.CASE_MODE : "";
 const REPLY_MODE = process.env.REPLY_MODE ? process.env.REPLY_MODE : "false";
 const BOT_REPLIES = process.env.BOT_REPLIES ? process.env.BOT_REPLIES : "false";
 const API_ERROR_MSG = process.env.API_ERROR_MSG ? process.env.BOT_REPLIES : "API request failed.";
+const DYNAMIC_TITLE_MSG = process.env.DYNAMIC_TITLE_MSG ? process.env.DYNAMIC_TITLE_MSG : "<p> says:";
+const EMBED_RESPONSE = process.env.EMBED_RESPONSE ? process.env.EMBED_RESPONSE : "true";
 
 module.exports = {
     voiceMapping,
     voiceDescriptions,
     ne_voiceDescriptions,
     modelName,
-    botCommand,
     BASE_URL,
     DISABLED_MSG,
     COMMAND_PERM_MSG,
@@ -147,5 +147,8 @@ module.exports = {
     SESSION_ID,
     ADMIN_ID,
     API_ERROR_MSG,
-    DISABLED_REPLIES
+    DISABLED_REPLIES,
+    DYNAMIC_TITLE_MSG,
+    EMBED_RESPONSE,
+    DYNAMIC_TITLE_MSG
   };

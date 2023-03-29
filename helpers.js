@@ -1,10 +1,10 @@
 // Global functions file
-const { BASE_URL, REPLY_MODE, SESSION_ID, ADMIN_ID} = require('./constants');
+const { BASE_URL, REPLY_MODE, SESSION_ID, ADMIN_ID, DYNAMIC_TITLE_MSG} = require('./constants');
 // Require TikTok TTS package and store sessionID and URL
 const { config, createAudioFromText } = require('tiktok-tts');
 //const BASE_URL = process.env.BASE_URL;
 config(SESSION_ID, BASE_URL);
-const { PermissionFlagsBits } = require('discord.js');
+const { PermissionFlagsBits, EmbedBuilder } = require('discord.js');
 // Require ffmpeg, fs, path, child_process for working with audio files
 const fs = require('fs');
 const path = require('path');
@@ -31,24 +31,85 @@ function isAdmin(interaction, msg) {
         }
     }
 }
-
-// Initialize personalities function
+// // Initialize personalities function
 function initPersonalities(personalities, env) {
 	let envKeys = Object.keys(env);
 	// For each variable in .env check if starts with personality_ and add to personalities array if true
 	envKeys.forEach(element => {
-		if (element.startsWith('personality_')) {
-			name = element.slice(12);
-            personalities.push({ 
-                "name": name, 
-                "prompt": env[element],
-                "request": [{
-                    "role": "system",
-                    "content": `${env[element]}`
-                }]
-            });
+		const matches = /^personality_([^_]+)(?:_(.*))?$/.exec(element);
+
+		if (matches) {
+			const name = matches[1];
+			const key = matches[2];
+			const value = env[element];
+
+			let personality = personalities.find((p) => p.name === name);
+
+			if (!personality) {
+				personality = {
+					name: name,
+					prompt: value,
+					request: [
+					  {
+						role: 'system',
+						content: value
+					  }
+					]
+				};
+				personalities.push(personality);
+			}
+
+			// Set the property dynamically based on the key
+			if (key) {
+				personality[key.toLowerCase()] = value;
+			} else {
+				personality.prompt = value;
+				personality.request[0].content = value;
+			}
 		}
 	});
+}
+
+
+
+// Get current personality from message
+function getPersonality(message, state) {
+    let personality = null;
+    let earliestIndex = Infinity;
+
+    // For each personality, check if the message includes the exact name of the personality
+    for (let i = 0; i < state.personalities.length; i++) {
+        let thisPersonality = state.personalities[i];
+        const regex = new RegExp('\\b' + thisPersonality.name.toUpperCase() + '\\b');
+        const match = regex.exec(message);
+
+        if (match && match.index < earliestIndex) {
+            personality = thisPersonality;
+            earliestIndex = match.index;
+        }
+    }
+
+    // Return the personality of the message
+    return personality;
+}
+
+function capitalizeFirstLetter(str) {
+	return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+function getPersonalityEmbed(personality, text, author, isSplit) {
+	// create an embed object
+	const dynTitle = isSplit ? ' ' : `**${DYNAMIC_TITLE_MSG.replace('<p>', capitalizeFirstLetter(personality.name))}**`;
+	let personEmbed = new EmbedBuilder()
+		.setColor(0x0099FF) // set the color of the embed
+		.setTitle(`${dynTitle}`) // set the title of the embed
+		.setDescription(text) // set the description of the embed
+		.setFooter({ text: `${author.username}#${author.discriminator}` });
+	if (personality.thumbnail && !isSplit) {
+		personEmbed.setThumbnail(personality.thumbnail);
+	}else {
+
+	}
+	return personEmbed;
 }
 
 // Split message function
@@ -163,5 +224,7 @@ module.exports = {
     textToSpeech,
     formatDate,
     callOpenAIWithRetry,
-    initPersonalities: initPersonalities
+    getPersonality,
+    initPersonalities,
+    getPersonalityEmbed
   };

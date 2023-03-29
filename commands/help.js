@@ -1,6 +1,6 @@
 // Requre the necessary discord.js classes
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
-const { DISABLED_MSG, botCommand } = require('../constants');
+const { DISABLED_MSG } = require('../constants');
 const { isAdmin } = require('../helpers');
 const { EmbedBuilder } = require('discord.js');
 
@@ -24,16 +24,16 @@ module.exports = {
 
         // add fields to the embed for each command and its usage
         helpEmbed.addFields(
-            { name: `${botCommand}enable`, value: 'Enables the bot.' },
-            { name: `${botCommand}disable`, value: 'Disables the bot.' },
-            { name: `${botCommand}reset`, value: `Resets the memory of all personalities or a single personality. \n \`${botCommand}reset [all,<personality_name>]\`` },
-            { name: `${botCommand}personality`, value: 'Displays all personalities and their prompts.' },
-            { name: `${botCommand}tts`, value: `Generates TTS for a message. \n \`${botCommand}tts <speaker> [<text>,<messageID>] \`` },
-            { name: `${botCommand}say`, value: `Generates TTS for a bot message. With no input, uses the last message with \`rocket\`. Both arguments are optional. \n \`${botCommand}say [<number>,<messageID>] <speaker>\`` },
-            { name: `${botCommand}speakers`, value: `Displays all TTS speakers available to the \`${botCommand}tts\` command.` },
-            { name: `${botCommand}sample`, value:`Listen to samples of each available speaker to the \`${botCommand}tts\` command. \n \`${botCommand}sample <speaker>\``},
-            { name: `${botCommand}add-personality`, value:`Add a personality to the bot. \n \`${botCommand}add-personality <name> <prompt>\``},
-            { name:`${botCommand}help`,value:'Displays this help message.'}
+            { name: `/enable`, value: 'Enables the bot.' },
+            { name: `/disable`, value: 'Disables the bot.' },
+            { name: `/reset`, value: `Resets the memory of all personalities or a single personality. \n \`/reset [all,<personality_name>]\`` },
+            { name: `/personality`, value: 'Displays all personalities and their prompts.' },
+            { name: `/tts`, value: `Generates TTS for a message. \n \`/tts <speaker> [<text>,<messageID>] \`` },
+            { name: `/say`, value: `Generates TTS for a bot message. With no input, uses the last message with \`rocket\`. Both arguments are optional. \n \`/say [<number>,<messageID>] <speaker>\`` },
+            { name: `/speakers`, value: `Displays all TTS speakers available to the \`/tts\` command.` },
+            { name: `/sample`, value:`Listen to samples of each available speaker to the \`/tts\` command. \n \`/sample <speaker>\``},
+            { name: `/add-personality`, value:`Add a personality to the bot. \n \`/add-personality <name> <prompt>\``},
+            { name: `/help`, value:'Displays this help message.'}
         );
         
 		// Send variable

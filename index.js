@@ -6,8 +6,8 @@ const { Client, GatewayIntentBits, Events, Collection } = require('discord.js');
 // Initialize .env config file
 require('dotenv').config();
 // Import functions and const
-const { isAdmin, splitMessage, sendCmdResp, formatDate, callOpenAIWithRetry, initPersonalities } = require('./helpers');
-const { modelName, API_ERROR_MSG, DISABLED_MSG, CASE_MODE, REPLY_MODE, BOT_REPLIES, DISABLED_REPLIES} = require('./constants');
+const { isAdmin, splitMessage, sendCmdResp, formatDate, callOpenAIWithRetry, initPersonalities, getPersonality, getPersonalityEmbed } = require('./helpers');
+const { modelName, API_ERROR_MSG, DISABLED_MSG, CASE_MODE, REPLY_MODE, BOT_REPLIES, DISABLED_REPLIES, EMBED_RESPONSE } = require('./constants');
 
 // Require openai and set API key and setup
 const { Configuration, OpenAIApi } = require("openai");
@@ -50,26 +50,7 @@ let state = {
 // Run function
 initPersonalities(state.personalities, process.env);
 
-// Get current personality from message
-function getPersonality(message) {
-    let personality = null;
-    let earliestIndex = Infinity;
 
-    // For each personality, check if the message includes the exact name of the personality
-    for (let i = 0; i < state.personalities.length; i++) {
-        let thisPersonality = state.personalities[i];
-        const regex = new RegExp('\\b' + thisPersonality.name.toUpperCase() + '\\b');
-        const match = regex.exec(message);
-
-        if (match && match.index < earliestIndex) {
-            personality = thisPersonality;
-            earliestIndex = match.index;
-        }
-    }
-
-    // Return the personality of the message
-    return personality;
-}
 
 // Listen for interactions/Commands
 client.on(Events.InteractionCreate, async interaction => {
@@ -106,7 +87,7 @@ client.on('messageCreate', async msg => {
 	}
 
 	// Run get personality from message function
-	p = getPersonality(msg.content.toUpperCase());
+	p = getPersonality(msg.content.toUpperCase(),state);
 	// Check if message is a reply if no personality name
 	if (p == null && msg.reference?.messageId) {
 		let refMsg = await msg.fetchReference();
@@ -143,10 +124,19 @@ client.on('messageCreate', async msg => {
 		const responseChunks = splitMessage(response, 2000)
 		// Send the split API response
 		for (let i = 0; i < responseChunks.length; i++) {
+			let full_msg;
+			if(EMBED_RESPONSE){
+				const isSplit = responseChunks.length > 1 && i > 0;
+				const msgEmbed = getPersonalityEmbed(p, responseChunks[i], msg.author, isSplit);
+				full_msg = {embeds: [msgEmbed]};
+			}else{
+				full_msg = responseChunks[i];
+			}
+			
 			if (REPLY_MODE === 'true' && i === 0) {
-				msg.reply(responseChunks[i]);
+				msg.reply(full_msg);
 			} else {
-				msg.channel.send(responseChunks[i]);
+				msg.channel.send(full_msg);
 			}
 		}
 	} catch (error) {
