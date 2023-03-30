@@ -28,7 +28,7 @@ module.exports = {
             { name: `/disable`, value: 'Disables the bot.' },
             { name: `/reset`, value: `Resets the memory of all personalities or a single personality. \n \`/reset [all,<personality_name>]\`` },
             { name: `/personality`, value: 'Displays all personalities and their prompts.' },
-            { name: `/tts`, value: `Generates TTS for a message. \n \`/tts <speaker> [<text>,<messageID>] \`` },
+            { name: `/tts`, value: `Generates TTS for a message. \n \`/tts [<text>,<messageID>] <speaker>\`` },
             { name: `/say`, value: `Generates TTS for a bot message. With no input, uses the last message with \`rocket\`. Both arguments are optional. \n \`/say [<number>,<messageID>] <speaker>\`` },
             { name: `/speakers`, value: `Displays all TTS speakers available to the \`/tts\` command.` },
             { name: `/sample`, value:`Listen to samples of each available speaker to the \`/tts\` command. \n \`/sample <speaker>\``},

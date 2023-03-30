@@ -1,7 +1,7 @@
 // Requre the necessary discord.js classes
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 const { isAdmin, textToSpeech  } = require('../helpers');
-const { voiceMapping, DISABLED_MSG } = require('../constants');
+const { voiceMapping, DISABLED_MSG, DEFAULT_TTS_SPEAKER } = require('../constants');
 const fs = require('fs');
 
 module.exports = {
@@ -9,9 +9,14 @@ module.exports = {
         .setName('tts')
         .setDescription('Generates TTS for a message using the specified speaker.')
         .addStringOption(option =>
+            option.setName('text_or_message_id')
+                .setDescription('The text or message ID to generate TTS')
+                .setRequired(true)
+        )
+        .addStringOption(option =>
             option.setName('speaker')
                 .setDescription('The speaker to use for TTS')
-                .setRequired(true)
+                .setRequired(false)
                 .addChoices(
                     { name: 'us_male1', value: 'en_us_006' },
                     { name: 'us_male2', value: 'en_us_007' },
@@ -41,9 +46,33 @@ module.exports = {
                 ),
         )
         .addStringOption(option =>
-            option.setName('text_or_message_id')
-                .setDescription('The text or message ID to generate TTS')
-                .setRequired(true)
+            option.setName('speaker2')
+                .setDescription('Extra speakers to use for TTS')
+                .setRequired(false)
+                .addChoices(
+                    { name: 'au_female', value: 'en_au_001' },
+                    { name: 'au_male', value: 'en_au_002' },
+                    { name: 'uk_male2', value: 'en_uk_003' },
+                    { name: 'us_female2', value: 'en_us_002' },
+                    { name: 'fr_male1', value: 'fr_001' },
+                    { name: 'fr_male2', value: 'fr_002' },
+                    { name: 'de_female', value: 'de_001' },
+                    { name: 'de_male', value: 'de_002' },
+                    { name: 'es_male', value: 'es_002' },
+                    { name: 'mx_male', value: 'es_mx_002' },
+                    { name: 'br_female1', value: 'br_001' },
+                    { name: 'br_female2', value: 'br_003' },
+                    { name: 'br_female3', value: 'br_004' },
+                    { name: 'br_male', value: 'br_005' },
+                    { name: 'id_female', value: 'id_001' },
+                    { name: 'jp_female1', value: 'jp_001' },
+                    { name: 'jp_female2', value: 'jp_003' },
+                    { name: 'jp_female3', value: 'jp_005' },
+                    { name: 'jp_male', value: 'jp_006' },
+                    { name: 'kr_male1', value: 'kr_002' },
+                    { name: 'kr_female', value: 'kr_003' },
+                    { name: 'kr_male2', value: 'kr_004' },
+                ),
         ),
     async execute(interaction, state) {
         // Check disabled status
@@ -51,13 +80,17 @@ module.exports = {
             await interaction.reply(DISABLED_MSG);
             return;
         }
-
+        // Initialize and check the text 
         let text = interaction.options.getString('text_or_message_id');
-
         if (text.length > 2 && !isNaN(text)) { // Check if the text argument is a message ID
             try {
                 const fetchedMessage = await interaction.channel.messages.fetch(text);
-                text = fetchedMessage.content;
+                if (fetchedMessage.embeds.length > 0 && fetchedMessage.embeds[0].description) {
+                    text = fetchedMessage.embeds[0].description;
+                } else {
+                    await interaction.reply("The message with the provided ID does not contain an embed with a description. Please provide a valid message ID (from this channel) or text.");
+                    return;
+                }
             } catch (error) {
                 console.error('Error fetching message by ID:', error);
                 await interaction.reply("Invalid message ID. Please provide a valid message ID (from this channel) or text.");
@@ -65,24 +98,34 @@ module.exports = {
             }
         }
 
+        // Check which speaker option was used
+        const speakerOption = interaction.options.getString('speaker');
+        const speaker2Option = interaction.options.getString('speaker2');
+        // Validate that only one speaker option was used
+        // if ((speakerOption && speaker2Option) || (!speakerOption && !speaker2Option)) {
+        //     await interaction.reply('Please provide either a "speaker" or "speaker2" option, but not both.');
+        //     return;
+        // }
+        // Set the speakerKey based on which option was used
+        // if 1 doesnt exist set it to 2, if neither set it to 'en_us_rocket'
+        const speakerKey = speakerOption ? speakerOption.toLowerCase() : (speaker2Option ? speaker2Option.toLowerCase() : DEFAULT_TTS_SPEAKER);
+
         // Validate speaker
         // Create a reverse mapping object
         const reverseVoiceMapping = {};
         for (const key in voiceMapping) {
             reverseVoiceMapping[voiceMapping[key]] = key;
         }
-        
-        // Extract the speakerKey from the command
-        const speakerKey = interaction.options.getString('speaker').toLowerCase();
-
+        // Invalidate if the speakerkey is not in the mapping
         if (!reverseVoiceMapping.hasOwnProperty(speakerKey)) {
             await interaction.reply('Invalid speaker. Please use a valid speaker name.');
             return;
         }
 
-        //const speaker = voiceMapping[speakerKey];
+        // Set speaker var to mapping match from speakerkey
         const speaker = voiceMapping[reverseVoiceMapping[speakerKey]];
 
+        // Determine filename based on speaker
         const voiceRegex = /(?<=^[^_]+_[^_]+_).+/;
         const speaker_name = speaker.match(voiceRegex)
         try {

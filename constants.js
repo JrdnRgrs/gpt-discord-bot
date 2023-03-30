@@ -126,6 +126,7 @@ const BOT_REPLIES = process.env.BOT_REPLIES ? process.env.BOT_REPLIES : "false";
 const API_ERROR_MSG = process.env.API_ERROR_MSG ? process.env.BOT_REPLIES : "API request failed.";
 const DYNAMIC_TITLE_MSG = process.env.DYNAMIC_TITLE_MSG ? process.env.DYNAMIC_TITLE_MSG : "<p> says:";
 const EMBED_RESPONSE = process.env.EMBED_RESPONSE ? process.env.EMBED_RESPONSE : "true";
+const DEFAULT_TTS_SPEAKER = process.env.DEFAULT_TTS_SPEAKER ? process.env.DEFAULT_TTS_SPEAKER : "rocket";
 
 module.exports = {
     voiceMapping,
@@ -150,5 +151,6 @@ module.exports = {
     DISABLED_REPLIES,
     DYNAMIC_TITLE_MSG,
     EMBED_RESPONSE,
-    DYNAMIC_TITLE_MSG
+    DYNAMIC_TITLE_MSG,
+    DEFAULT_TTS_SPEAKER
   };

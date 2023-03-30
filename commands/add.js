@@ -28,7 +28,17 @@ module.exports = {
         // Check if personality already exists
         const existingPersonality = state.personalities.find(p => p.name.toUpperCase() === name.toUpperCase());
         if (existingPersonality) {
-            await interaction.reply('A personality with this name already exists. Please choose a different name.');
+            // If the existing prompt is undefined and a new prompt is provided, update it
+            if (typeof existingPersonality.prompt === 'undefined' && prompt) {
+                existingPersonality.prompt = prompt;
+                existingPersonality.request = [{
+                    "role": "system",
+                    "content": `${prompt}`
+                }];
+                await interaction.reply(`Updated the prompt for the existing personality "${name}".`);
+            } else {
+                await interaction.reply('A personality with this name already exists. Please choose a different name.');
+            }
             return;
         }
 
