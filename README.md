@@ -31,8 +31,9 @@ A GPT powered Discord Bot built with NodeJS.
 7. Download Source Code from releases or clone this repo for dev build.
 8. Run `npm ci` to install NPM dependencies.
 9.  Copy `.env.example` to `.env` and add all previously mentioned required keys into `.env`. Add 1 or more personalities. Change other options to your liking.
-10. Finally, run `npm start` or `node index.js` to run the bot.
-11. **OPTIONAL** Run the bot in a container if you want to keep your bot active. See [below](#docker) for instructions.
+10. Run node `deploy-commands.js` to deploy the bot's slash commands to discord.
+11. Finally, run `npm start` or `node index.js` to run the bot.
+12. **OPTIONAL** Run the bot in a container if you want to keep your bot active. See [below](#docker) for instructions.
 
 ## Usage
 Once the server is started, simply send a message containing the personality name you put in the `.env` file and a question, comment, etc. and the bot will respond
