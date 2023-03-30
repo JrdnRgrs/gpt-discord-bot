@@ -35,21 +35,35 @@ A GPT powered Discord Bot built with NodeJS.
 11. **OPTIONAL** Run the bot in a container if you want to keep your bot active. See [below](#docker) for instructions.
 
 ## Usage
-Once the server is started, simply send a message containing the personality name you put in the `.env` file and a question, comment, etc. and the bot will respond!
+Once the server is started, simply send a message containing the personality name you put in the `.env` file and a question, comment, etc. and the bot will respond/
 ### Commands
-- `!enable`: Enables the bot.
-- `!disable`: Disables the bot.
-- `!reset [all,<personality_name>]`: Resets the memory of all personalities or a single personality.
-  - Usage: `!reset [all,<personality_name>]`
-- `!personality`: Displays all personalities and their prompts.
-- `!tts <speaker> <message>`: Generates TTS for a message. You must specify a valid speaker, use `!speakers` to see all available and `!sample <speaker>` to hear samples of each. 
-  - Usage: `!tts <speaker> [<text>,<messageID>] `
-- `!say`: Generates TTS for a bot message. With no input, uses the last message with `rocket`. Both arguments are optional. 
-  - Usage: `!say [<number>,<messageID>] <speaker>`
-- `!speakers`: Displays all TTS speakers available to the `!tts` command.  
-- `!sample`: Listen to samples of each available speaker to the `!tts` command.
-  - Usage: `!sample <speaker>`
-- `!help`: Displays a help message with all available commands. 
+- `/enable`: Enables the bot.
+- `/disable`: Disables the bot.
+- `/reset [all,<personality_name>]`: Resets the memory of all personalities or a single personality.
+  - Usage: `/reset [all,<personality_name>]`
+- `/personality`: Displays all personalities and their prompts.
+- `/add-personality`: Add a personality to the bot. 
+  - Usage: `/add-personality <name> <prompt>`
+- `/tts <message> <speaker> `: Generates TTS for a message. You must specify a valid speaker, use `/speakers` to see all available and `/sample <speaker>` to hear samples of each. 
+  - Usage: `/tts [<text>,<messageID>] <speaker> `
+- `/say`: Generates TTS for a bot message. With no input, uses the last message with `rocket`. Both arguments are optional. 
+  - Usage: `/say [<number>,<messageID>] <speaker>`
+- `/speakers`: Displays all TTS speakers available to the `/tts` command.  
+- `/sample`: Listen to samples of each available speaker to the `/tts` command.
+  - Usage: `/sample <speaker>`
+- `/help`: Displays a help message with all available commands. 
+
+## Config Environment Variables
+
+Use the following environment variables to configure certain features:
+- `REPLY_MODE` - Whether or not bot should use Discord replies for messages.
+- `BOT_REPLIES` - Whether or not bot should reply to other bots (but never itself).
+- `EMBED_RESPONSE` - Whether or not to use embeds when responding (new features will be developed for true)
+- `DEFAULT_TTS_SPEAKER` - Used when no speaker is specified in a TTS command
+
+These env vars are dynamic based on the personality. Use "\<p>" as a placeholder for the personality name:
+- `DYNAMIC_RESET_MSG` - Bot message for single personality reset.
+- `DYNAMIC_TITLE_MSG` - Bot message for the title of embeds. Will be wrapped in \*\* \*\*.
 
 ## Get TikTok Session id 🍪
 - Install [Cookie Editor extension](https://cookie-editor.cgagnier.ca) for your browser.
