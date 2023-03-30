@@ -84,6 +84,9 @@ Personalities:
 - Ensure your `.env` file exists and is populated with the correct values.
 - Run `docker build -t gpt-discord-bot .` to build the image.
 - Run `docker-compose up -d` to create a stack. This will mount the .env file to `/app/.env` within the container.
+- The compose file expects you to provide an additional environment variable to point at the location of the `.env` file to use. Either change this before running, or supply the following:
+  - `PROJECT_PATH` - The full path of the directory your `.env` file is in
+  - `ENV_NAME` - The name of your `.env` file. Leave blank if just `.env`
 
 ## Contributing
 Feel free to fork this repo and submit pull requests for different features, fixes, and changes.

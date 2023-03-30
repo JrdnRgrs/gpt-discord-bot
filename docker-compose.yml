@@ -4,4 +4,4 @@ services:
     image: ghcr.io/jrdnrgrs/gpt-discord-bot:latest
     restart: always
     volumes:
-      - $PROJECT_PATH/.env:/app/.env:ro
+      - $PROJECT_PATH/$ENV_NAME.env:/app/.env:ro

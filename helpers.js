@@ -70,8 +70,6 @@ function initPersonalities(personalities, env) {
 	});
 }
 
-
-
 // Get current personality from message
 function getPersonality(message, state) {
     let personality = null;
