@@ -35,27 +35,21 @@ A GPT powered Discord Bot built with NodeJS.
 11. **OPTIONAL** Run the bot in a container if you want to keep your bot active. See [below](#docker) for instructions.
 
 ## Usage
-Once the server is started, simply send a message containing the personality name you put in the `.env` file and a question, comment, etc. and the bot will respond/
+Once the server is started, simply send a message containing the personality name you put in the `.env` file and a question, comment, etc. and the bot will respond
+
+**Note:** for both tts commands, options `speaker` or `speaker2` are available. `speaker` contains english speaking voices, and `speaker2` contains any remaining voices. You may **ONLY** specify **ONE** of these.
 ### Commands
 - `/enable`: Enables the bot.
 - `/disable`: Disables the bot.
-- `/reset`: Resets the memory of all personalities or a single personality. If personality is ephemeral, sets its prompt to `undefined`.
-  - Usage: `/reset [all,<personality_name>]`
+- `/reset [all,<personality_name>]`: Resets the memory of all personalities or a single personality. If personality is ephemeral, sets its prompt to `undefined`.
 - `/personality`: Displays all personalities and their prompts.
-- `/add-personality`: Adds an ephemeral personality to the bot, it will be lost when the bot restarts. Can also update `undefined` prompts. 
-  - Usage: `/add-personality <name> <prompt>`
-- `/tts`: Generates TTS for given text or message ID. 
-  - Usage: `/tts [<text>,<messageID>] <speaker> `
-  - **Note:** for both tts commands, options `speaker` or `speaker2` are available. `speaker` contains english speaking voices, and `speaker2` contains any remaining voices. You may **ONLY** specify one of these.
-- `/say`: Generates TTS for a bot message `<number>` messages or a message ID. With no input, uses the last message with `rocket`. Both arguments are optional.
-  - Usage: `/say [<number>,<messageID>] <speaker>`
+- `/add-personality <name> <prompt>`: Adds an ephemeral personality to the bot, it will be lost when the bot restarts. Can also update `undefined` prompts. 
+- `/tts [<text>,<messageID>] <speaker>`: Generates TTS for given text or message ID. 
+- `/say [<number>,<messageID>] <speaker>`: Generates TTS for a bot message `<number>` messages back or a message ID. With no input, uses the last message with `rocket`. Both arguments are optional.
 - `/speakers`: Displays speakers available to the `/tts` and `/say` commands. Specify `all` to display extra and non-english voices as well.
-- `/sample`: Listen to samples of each available speaker to the `/tts` and `/say` commands.
-  - Usage: `/sample <speaker>`
+- `/sample <speaker>`: Listen to samples of each available speaker to the `/tts` and `/say` commands.
 - `/help`: Displays a help message with all available commands. 
-
-
-## Config Environment Variables
+### Config Environment Variables
 
 Use the following environment variables to configure certain features:
 - `REPLY_MODE` - Whether or not bot should use Discord replies for messages.
