@@ -39,17 +39,18 @@ Once the server is started, simply send a message containing the personality nam
 ### Commands
 - `/enable`: Enables the bot.
 - `/disable`: Disables the bot.
-- `/reset [all,<personality_name>]`: Resets the memory of all personalities or a single personality.
+- `/reset`: Resets the memory of all personalities or a single personality. If personality is ephemeral, sets its prompt to `undefined`.
   - Usage: `/reset [all,<personality_name>]`
 - `/personality`: Displays all personalities and their prompts.
-- `/add-personality`: Add a personality to the bot. 
+- `/add-personality`: Adds an ephemeral personality to the bot, it will be lost when the bot restarts. Can also update `undefined` prompts. 
   - Usage: `/add-personality <name> <prompt>`
-- `/tts <message> <speaker> `: Generates TTS for a message. You must specify a valid speaker, use `/speakers` to see all available and `/sample <speaker>` to hear samples of each. 
+- `/tts`: Generates TTS for given text or message ID. 
   - Usage: `/tts [<text>,<messageID>] <speaker> `
-- `/say`: Generates TTS for a bot message. With no input, uses the last message with `rocket`. Both arguments are optional. 
+  - **Note:** for both tts commands, options `speaker` or `speaker2` are available. `speaker` contains english speaking voices, and `speaker2` contains any remaining voices. You may **ONLY** specify one of these.
+- `/say`: Generates TTS for a bot message `<number>` messages or a message ID. With no input, uses the last message with `rocket`. Both arguments are optional.
   - Usage: `/say [<number>,<messageID>] <speaker>`
-- `/speakers`: Displays all TTS speakers available to the `/tts` command.  
-- `/sample`: Listen to samples of each available speaker to the `/tts` command.
+- `/speakers`: Displays speakers available to the `/tts` and `/say` commands. Specify `all` to display extra and non-english voices as well.
+- `/sample`: Listen to samples of each available speaker to the `/tts` and `/say` commands.
   - Usage: `/sample <speaker>`
 - `/help`: Displays a help message with all available commands. 
 
