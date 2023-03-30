@@ -5,6 +5,8 @@ on:
     paths:
       - 'Dockerfile'
       - 'index.js'
+      - 'helpers.js'
+      - 'constants.js'
       - 'package.json'
       - './commands/*'
 

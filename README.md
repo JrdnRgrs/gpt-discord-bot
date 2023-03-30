@@ -49,6 +49,7 @@ Once the server is started, simply send a message containing the personality nam
 - `/say [<number>,<messageID>] <speaker>`: Generates TTS for a bot message `<number>` messages back or a message ID. With no input, uses the last message with `rocket`. Both arguments are optional.
 - `/speakers`: Displays speakers available to the `/tts` and `/say` commands. Specify `all` to display extra and non-english voices as well.
 - `/sample <speaker>`: Listen to samples of each available speaker to the `/tts` and `/say` commands.
+- `/reload`: ***(Admins ONLY)*** Reload a command if the code for it has changed.
 - `/help`: Displays a help message with all available commands. 
 ### Config Environment Variables
 
