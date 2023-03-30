@@ -53,6 +53,7 @@ Once the server is started, simply send a message containing the personality nam
   - Usage: `/sample <speaker>`
 - `/help`: Displays a help message with all available commands. 
 
+
 ## Config Environment Variables
 
 Use the following environment variables to configure certain features:
@@ -64,6 +65,18 @@ Use the following environment variables to configure certain features:
 These env vars are dynamic based on the personality. Use "\<p>" as a placeholder for the personality name:
 - `DYNAMIC_RESET_MSG` - Bot message for single personality reset.
 - `DYNAMIC_TITLE_MSG` - Bot message for the title of embeds. Will be wrapped in \*\* \*\*.
+
+Personalities:
+- `personality_NAME_thumbnail` - The thumbnail for the bot embed picture, optional
+
+
+## Screenshots
+
+### Multiple Personalities
+
+![Image of the bot](https://i.imgur.com/0VfYZDc.png)
+
+[![Image of the bot](https://i.gyazo.com/e8ec6a8731779ef537f56de2c603ee3d.gif)](https://gyazo.com/e8ec6a8731779ef537f56de2c603ee3d)
 
 ## Get TikTok Session id 🍪
 - Install [Cookie Editor extension](https://cookie-editor.cgagnier.ca) for your browser.
