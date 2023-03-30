@@ -6,7 +6,7 @@ const { Client, GatewayIntentBits, Events, Collection } = require('discord.js');
 // Initialize .env config file
 require('dotenv').config();
 // Import functions and const
-const { isAdmin, splitMessage, sendCmdResp, formatDate, callOpenAIWithRetry, initPersonalities, getPersonality, getPersonalityEmbed } = require('./helpers');
+const { isAdmin, disableCheck, splitMessage, sendCmdResp, formatDate, callOpenAIWithRetry, initPersonalities, getPersonality, getPersonalityEmbed } = require('./helpers');
 const { modelName, API_ERROR_MSG, DISABLED_MSG, CASE_MODE, REPLY_MODE, BOT_REPLIES, DISABLED_REPLIES, EMBED_RESPONSE } = require('./constants');
 
 // Require openai and set API key and setup
@@ -98,15 +98,9 @@ client.on('messageCreate', async msg => {
 		}
 	}
 	if (p == null) return;
-
 	// Check if bot disabled/enabled
-	if (state.isPaused === true && !isAdmin(null, msg)) {
-		if(DISABLED_REPLIES === "true"){
-			sendCmdResp(msg, DISABLED_MSG);
-			return;
-		} else {
-			return;
-		}
+	if (!await disableCheck(msg, state)) {
+		return;
 	}
 
 	// Add user message to request
@@ -125,19 +119,14 @@ client.on('messageCreate', async msg => {
 		// Send the split API response
 		for (let i = 0; i < responseChunks.length; i++) {
 			let full_msg;
-			if(EMBED_RESPONSE){
+			if (EMBED_RESPONSE) {
 				const isSplit = responseChunks.length > 1 && i > 0;
 				const msgEmbed = getPersonalityEmbed(p, responseChunks[i], msg.author, isSplit);
 				full_msg = {embeds: [msgEmbed]};
-			}else{
+			} else {
 				full_msg = responseChunks[i];
 			}
-			
-			if (REPLY_MODE === 'true' && i === 0) {
-				msg.reply(full_msg);
-			} else {
-				msg.channel.send(full_msg);
-			}
+			sendCmdResp(msg, full_msg, i === 0);
 		}
 	} catch (error) {
 		console.error(`[${formatDate(new Date())}] Message processing failed:`, error);

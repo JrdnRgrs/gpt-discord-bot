@@ -1,7 +1,7 @@
 // Requre the necessary discord.js classes
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
-const { isAdmin, textToSpeech  } = require('../helpers');
-const { voiceMapping, DISABLED_MSG, DEFAULT_TTS_SPEAKER } = require('../constants');
+const { SlashCommandBuilder } = require('discord.js');
+const { disableCheck, textToSpeech  } = require('../helpers');
+const { voiceMapping, DEFAULT_TTS_SPEAKER, DISABLED_MSG } = require('../constants');
 const fs = require('fs');
 
 module.exports = {
@@ -75,9 +75,8 @@ module.exports = {
                 ),
         ),
     async execute(interaction, state) {
-        // Check disabled status
-        if (!isAdmin(interaction) && state.isPaused === true) {
-            await interaction.reply(DISABLED_MSG);
+        // Check admin/pause state
+        if (!await disableCheck(interaction, state, DISABLED_MSG)) {
             return;
         }
         // Initialize and check the text 

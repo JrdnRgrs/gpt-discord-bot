@@ -1,5 +1,5 @@
 // Global functions file
-const { BASE_URL, REPLY_MODE, SESSION_ID, ADMIN_ID, DYNAMIC_TITLE_MSG} = require('./constants');
+const { BASE_URL, REPLY_MODE, SESSION_ID, ADMIN_ID, DYNAMIC_TITLE_MSG, DISABLED_MSG, DISABLED_REPLIES} = require('./constants');
 // Require TikTok TTS package and store sessionID and URL
 const { config, createAudioFromText } = require('tiktok-tts');
 //const BASE_URL = process.env.BASE_URL;
@@ -15,22 +15,52 @@ const { exec } = require('child_process');
 // Set admin user IDs
 const adminId = ADMIN_ID.split(',');
 // Check message author id function
-function isAdmin(interaction, msg) {
-	//if (msg.member.permissions.has(PermissionFlagsBits.Administrator) || msg.member.permissions.has(PermissionFlagsBits.ManageMessages)) {
-    if (msg) {
-        if (msg.member.permissions.has(PermissionFlagsBits.Administrator) || msg.member.permissions.has(PermissionFlagsBits.ManageMessages)) {
-            return true;
-        } else {
-            return adminId.includes(msg.author.id);
-        }
-    } else if (interaction) {
-        if (interaction.member.permissions.has(PermissionFlagsBits.Administrator) || interaction.member.permissions.has(PermissionFlagsBits.ManageMessages)) {
-            return true;
-        } else {
-            return adminId.includes(interaction.user.id);
-        }
+function isAdmin(target, isInteraction) {
+    const member = isInteraction ? target.member : target.member;
+    const user = isInteraction ? target.user : target.author;
+
+    if (!member || !user) {
+        return false;
+    }
+
+    if (member.permissions.has(PermissionFlagsBits.Administrator) || member.permissions.has(PermissionFlagsBits.ManageMessages)) {
+        return true;
+    } else {
+        return adminId.includes(user.id);
     }
 }
+
+async function disableCheck(target, state, dis_response) {
+	const isInteraction = target.isCommand?.();
+
+    if (!isAdmin(target, isInteraction) && state.isPaused === true) {
+        if (!isInteraction) {
+			if (DISABLED_REPLIES === "true") {
+				sendCmdResp(target, dis_response);
+			}else{
+				// Respond in DM
+				//await target.author.send(dis_response);
+				return;
+			}
+			
+        } else {
+            await target.reply({ content: dis_response, ephemeral: true });
+        }
+        return false;
+    }
+
+    return true;
+}
+// Send command responses function
+function sendCmdResp(msg, cmdResp, useReply = false) {
+    if (REPLY_MODE === 'true' && useReply) {
+        msg.reply(cmdResp);
+    } else {
+        msg.channel.send(cmdResp);
+    }
+}
+
+
 // // Initialize personalities function
 function initPersonalities(personalities, env) {
 	let envKeys = Object.keys(env);
@@ -126,14 +156,7 @@ function splitMessage(resp, charLim) {
 	return responses;
 }
 
-// Send command responses function
-function sendCmdResp(msg, cmdResp) {
-    if (REPLY_MODE === 'true') {
-        msg.reply(cmdResp);
-    } else {
-        msg.channel.send(cmdResp);
-    }
-}
+
 
 // Format the date into [yyyy-MM-DD HH:mm:ss]
 function formatDate(date) {
@@ -217,6 +240,7 @@ async function textToSpeech(speaker, text) {
 module.exports = {
     isAdmin,
     splitMessage,
+	disableCheck,
     sendCmdResp,
     mergeAudioFiles,
     textToSpeech,

@@ -1,8 +1,8 @@
 // Requre the necessary discord.js classes
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
-const { DISABLED_MSG, voiceDescriptions, ne_voiceDescriptions } = require('../constants');
+const { SlashCommandBuilder } = require('discord.js');
+const { voiceDescriptions, ne_voiceDescriptions, DISABLED_MSG } = require('../constants');
 const { EmbedBuilder } = require('discord.js');
-const { isAdmin } = require('../helpers');
+const { disableCheck } = require('../helpers');
 
 // merge voice names if multiple numbers. Outputs like us_male1,2,3,4
 function groupVoiceDescriptions(voiceDescriptions) {
@@ -66,10 +66,8 @@ module.exports = {
             .setDescription('Specify "all" to display all voices, including non-English speakers.')
             .setRequired(false)),
     async execute(interaction, state) {
-        // Commands to execute
         // Check admin/pause state
-        if (!isAdmin(interaction) && state.isPaused === true) {
-            await interaction.reply(DISABLED_MSG);
+        if (!await disableCheck(interaction, state, DISABLED_MSG)) {
             return;
         }
 
