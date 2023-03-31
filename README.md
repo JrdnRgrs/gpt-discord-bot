@@ -50,7 +50,7 @@ Once the server is started, simply send a message containing the personality nam
 - `/speakers`: Displays speakers available to the `/tts` and `/say` commands. Specify `all` to display extra and non-english voices as well.
 - `/sample <speaker>`: Listen to samples of each available speaker to the `/tts` and `/say` commands.
 - `/reload`: ***(Admins ONLY)*** Reload a command if the code for it has changed.
-- `/tokenreset`: ***(Admins ONLY)*** Reset the token count for the bot.
+- `/tokenreset`: ***(Admins ONLY)*** Reset the token count for the bot. Use with `show_count: true` to only display current token count.
 - `/help`: Displays a help message with all available commands. 
 ### Config Environment Variables
 
