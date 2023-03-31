@@ -1,8 +1,8 @@
 // Use this file to deploy or delete bot commands
-//      node deploy-commands.js                                  - deploy all commands in ./commands/ using .env
-//      node deploy-commands.js bot2.env                         - deploy all commands using bot2.env
-//      node deploy-commands.js bot2.env -x ignore.js      - deploy all commands but ignore ignore.js command
-//      node deploy-commands.js bot2.env -d 10910978101259986993 - delete a global command with id
+//      node deploy-commands.js                                    - deploy all commands in ./commands/ using .env
+//      node deploy-commands.js bot2.env                           - deploy all commands using bot2.env
+//      node deploy-commands.js bot2.env -x ignore.js,test.js      - deploy all commands but ignore ignore.js and test.js commands
+//      node deploy-commands.js bot2.env -d 10910978101259986993   - delete a global command with id
 //      Args Usage:
 //          -x <filename>: Ignore a specific file when deploying commands.
 //          -d <command_id>: Delete a command by its ID.
