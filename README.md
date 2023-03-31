@@ -32,7 +32,7 @@ A GPT powered Discord Bot built with NodeJS.
 7. Download Source Code from releases or clone this repo for dev build.
 8. Run `npm ci` to install NPM dependencies.
 9.  Copy `.env.example` to `.env` and add all previously mentioned required keys into `.env`. Add 1 or more personalities. Change other options to your liking.
-10.  Run node `deploy-commands.js` to deploy the bot's slash commands to discord. See [below](#deploying-commands) for additional details.
+10.  Run `node deploy-commands.js` to deploy the bot's slash commands to discord. See [below](#deploying-commands) for additional details.
 11. Finally, run `npm start` or `node index.js` to run the bot.
 12. **OPTIONAL** Run the bot in a container if you want to keep your bot active. See [below](#docker) for instructions.
 
@@ -78,8 +78,8 @@ Personalities:
 To use the deploy/delete script, run `node ./deploy-commands.js` followed by one or more arguments. The available arguments are:
 
 *   `[env]` (optional): the name of the `.env` file to use. If not specified, the script will use `.env` by default.
-*   `-d [command]` (optional): the name of the command to delete. If specified, the script will delete the command with the given name instead of deploying all commands.
-*   `-x [file]` (optional): the name of a command file to ignore. If specified, the script will not deploy the command with the given name.
+*   `-d [command]` (optional): the name of the command to delete. If specified, the script will delete the command with the given id.
+*   `-x [file]` (optional): the name of a command file(s) to ignore. If specified, the script will not deploy the command(s) with the given file name(s).
 
 To deploy all commands using the default `.env` file, run:
 
