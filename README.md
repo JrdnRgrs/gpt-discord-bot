@@ -1,6 +1,7 @@
 # ChatGPT Discord Bot
 A GPT powered Discord Bot built with NodeJS.
 
+![Image of the bot](https://i.imgur.com/0VfYZDc.png)
 
 ## Features
 * Multiple Personality Support: Add multiple personalities and depending on how you call the bot, it will respond differently.
@@ -31,7 +32,7 @@ A GPT powered Discord Bot built with NodeJS.
 7. Download Source Code from releases or clone this repo for dev build.
 8. Run `npm ci` to install NPM dependencies.
 9.  Copy `.env.example` to `.env` and add all previously mentioned required keys into `.env`. Add 1 or more personalities. Change other options to your liking.
-10. Run node `deploy-commands.js` to deploy the bot's slash commands to discord.
+10.  Run node `deploy-commands.js` to deploy the bot's slash commands to discord. See [below](#deploying-commands) for additional details.
 11. Finally, run `npm start` or `node index.js` to run the bot.
 12. **OPTIONAL** Run the bot in a container if you want to keep your bot active. See [below](#docker) for instructions.
 
@@ -50,7 +51,7 @@ Once the server is started, simply send a message containing the personality nam
 - `/speakers`: Displays speakers available to the `/tts` and `/say` commands. Specify `all` to display extra and non-english voices as well.
 - `/sample <speaker>`: Listen to samples of each available speaker to the `/tts` and `/say` commands.
 - `/reload`: ***(Admins ONLY)*** Reload a command if the code for it has changed.
-- `/tokenreset`: ***(Admins ONLY)*** Reset the token count for the bot. Use with `show_count: true` to only display current token count.
+- `/tokenreset`: ***(Admins ONLY)*** Reset the token count for the bot. Use with `show_count` to only display current token count.
 - `/help`: Displays a help message with all available commands. 
 ### Config Environment Variables
 
@@ -71,12 +72,43 @@ These env vars are dynamic based on the personality. Use \<p> or \<m> as a place
 Personalities:
 - `personality_NAME_thumbnail` - The thumbnail for the bot embed picture, optional
 
+### Deploying Commands
+<details>
+  <summary>Click to expand</summary>
+To use the deploy/delete script, run `node ./deploy-commands.js` followed by one or more arguments. The available arguments are:
+
+*   `[env]` (optional): the name of the `.env` file to use. If not specified, the script will use `.env` by default.
+*   `-d [command]` (optional): the name of the command to delete. If specified, the script will delete the command with the given name instead of deploying all commands.
+*   `-x [file]` (optional): the name of a command file to ignore. If specified, the script will not deploy the command with the given name.
+
+To deploy all commands using the default `.env` file, run:
+
+```bash
+node ./deploy-commands.js
+```
+
+To deploy all commands using a custom `.env` file named `bot2.env`, run:
+
+```bash
+node ./deploy-commands.js bot2.env
+```
+
+To delete a command, find its command id, then run:
+
+```bash
+node ./deploy-commands.js bot2.env -d COMMAND_ID
+```
+
+To deploy all commands except the command in `ignore.js`, run:
+
+```bash
+node ./deploy-commands.js bot2.env -x ignore.js
+```
+</details>
 
 ## Screenshots
 
 ### Multiple Personalities
-
-![Image of the bot](https://i.imgur.com/0VfYZDc.png)
 
 [![Image of the bot](https://i.gyazo.com/e8ec6a8731779ef537f56de2c603ee3d.gif)](https://gyazo.com/e8ec6a8731779ef537f56de2c603ee3d)
 
