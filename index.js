@@ -6,7 +6,7 @@ const { Client, GatewayIntentBits, Events, Collection } = require('discord.js');
 // Initialize .env config file
 require('dotenv').config();
 // Import functions and const
-const { isAdmin, disableCheck, splitMessage, sendCmdResp, formatDate, callOpenAIWithRetry, initPersonalities, getPersonality, getPersonalityEmbed } = require('./helpers');
+const { isAdmin, disableCheck, splitMessage, sendCmdResp, checkTokens, formatDate, callOpenAIWithRetry, initPersonalities, getPersonality, getPersonalityEmbed } = require('./helpers');
 const { modelName, API_ERROR_MSG, DISABLED_MSG, CASE_MODE, REPLY_MODE, BOT_REPLIES, DISABLED_REPLIES, EMBED_RESPONSE } = require('./constants');
 
 // Require openai and set API key and setup
@@ -45,6 +45,8 @@ client.on('ready', () => {
 let state = {
 	isPaused: false,
 	personalities: [],
+	timer: null,
+	tokenCount: null
 };
 
 // Run function
@@ -99,9 +101,14 @@ client.on('messageCreate', async msg => {
 	}
 	if (p == null) return;
 	// Check if bot disabled/enabled
-	if (!await disableCheck(msg, state)) {
-		return;
-	}
+	// if (!await disableCheck(msg, state)) {
+	// 	return;
+	// }
+	// Check permissions and tokens
+    const permissionCheckResult = await checkTokens(msg, state);
+    if (!permissionCheckResult.result) {
+        return;
+    }
 
 	// Add user message to request
 	p.request.push({"role": "user", "content": `${msg.content}`});
@@ -112,7 +119,7 @@ client.on('messageCreate', async msg => {
 
 		// Run API request function
 		//const response = await chat(p.request);
-		const response = await callOpenAIWithRetry(() => chat(p.request), 3, 5000);
+		const response = await callOpenAIWithRetry(() => chat(p.request, msg), 3, 5000);
 		console.log(`[${formatDate(new Date())}] Received API response.`);
 		// Split response if it exceeds the Discord 2000 character limit
 		const responseChunks = splitMessage(response, 2000)
@@ -135,7 +142,7 @@ client.on('messageCreate', async msg => {
 });
 
 // API request function
-async function chat(requestX){
+async function chat(requestX, msg){
 	try {
 		// Make API request
 		const completion = await openai.createChatCompletion({
@@ -143,8 +150,11 @@ async function chat(requestX){
 			messages: requestX
 		});
 
-		// Add assistant message to next request
-		requestX.push({"role": "assistant", "content": `${completion.data.choices[0].message.content}`});
+		// Increase token counter if not admin
+		if (!isAdmin(msg, false)) {
+			state.tokenCount += completion.data.usage.completion_tokens;
+		}
+		
 		let responseContent;
 
 		// Check capitlization mode
@@ -161,6 +171,9 @@ async function chat(requestX){
 			default:
 				console.log('[WARNING] Invalid CASE_MODE value. Please change and restart bot.');
 		}
+		// Add assistant message to next request
+		requestX.push({"role": "assistant", "content": `${completion.data.choices[0].message.content}`});
+
 		// Return response
 		return responseContent;
 	} catch (error) {

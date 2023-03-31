@@ -1,8 +1,7 @@
 // Global functions file
-const { BASE_URL, REPLY_MODE, SESSION_ID, ADMIN_ID, DYNAMIC_TITLE_MSG, DISABLED_MSG, DISABLED_REPLIES} = require('./constants');
+const { BASE_URL, REPLY_MODE, SESSION_ID, ADMIN_ID, DYNAMIC_TITLE_MSG, DISABLED_MSG, DISABLED_REPLIES, TOKEN_LIMIT_MSG, TOKEN_RESET_TIME, TOKEN_NUM} = require('./constants');
 // Require TikTok TTS package and store sessionID and URL
 const { config, createAudioFromText } = require('tiktok-tts');
-//const BASE_URL = process.env.BASE_URL;
 config(SESSION_ID, BASE_URL);
 const { PermissionFlagsBits, EmbedBuilder } = require('discord.js');
 // Require ffmpeg, fs, path, child_process for working with audio files
@@ -58,6 +57,37 @@ function sendCmdResp(msg, cmdResp, useReply = false) {
     } else {
         msg.channel.send(cmdResp);
     }
+}
+// Check tokens function
+async function checkTokens(msg, state) {
+    // Check if admin and if the bot is disabled/enabled
+    const disableCheckResult = await disableCheck(msg, state, DISABLED_MSG);
+    if (!disableCheckResult) {
+        return { result: false };
+    }
+
+	// Bypass token limit checks if TOKEN_RESET_TIME or TOKEN_NUM are set to 0 or not set
+	if (!TOKEN_RESET_TIME || !TOKEN_NUM || parseInt(TOKEN_RESET_TIME, 10) === 0 || parseInt(TOKEN_NUM, 10) === 0) {
+		return { result: true };
+	}
+
+    // Token limit check
+    if (!isAdmin(msg, false)) {
+        timePassed = Math.abs(new Date() - state.timer);
+        // Set variables on first start or when time exceeds timer
+        if (timePassed >= parseInt(TOKEN_RESET_TIME, 10) || state.timer === null) {
+            state.timer = new Date();
+            state.tokenCount = 0;
+        }
+
+		// Send message when token limit reached
+        if (timePassed < parseInt(TOKEN_RESET_TIME, 10) && state.tokenCount >= parseInt(TOKEN_NUM, 10)) {
+            sendCmdResp(msg, TOKEN_LIMIT_MSG.replace("<m>", Math.round((parseInt(TOKEN_RESET_TIME, 10) - timePassed) / 60000 * 10) / 10));
+            return { result: false };
+        }
+    }
+
+    return { result: true };
 }
 
 
@@ -248,5 +278,6 @@ module.exports = {
     callOpenAIWithRetry,
     getPersonality,
     initPersonalities,
-    getPersonalityEmbed
+    getPersonalityEmbed,
+	checkTokens
   };

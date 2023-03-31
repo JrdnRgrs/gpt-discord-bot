@@ -50,18 +50,23 @@ Once the server is started, simply send a message containing the personality nam
 - `/speakers`: Displays speakers available to the `/tts` and `/say` commands. Specify `all` to display extra and non-english voices as well.
 - `/sample <speaker>`: Listen to samples of each available speaker to the `/tts` and `/say` commands.
 - `/reload`: ***(Admins ONLY)*** Reload a command if the code for it has changed.
+- `/tokenreset`: ***(Admins ONLY)*** Reset the token count for the bot.
 - `/help`: Displays a help message with all available commands. 
 ### Config Environment Variables
 
 Use the following environment variables to configure certain features:
 - `REPLY_MODE` - Whether or not bot should use Discord replies for messages.
 - `BOT_REPLIES` - Whether or not bot should reply to other bots (but never itself).
-- `EMBED_RESPONSE` - Whether or not to use embeds when responding (new features will be developed for true)
-- `DEFAULT_TTS_SPEAKER` - Used when no speaker is specified in a TTS command
+- `EMBED_RESPONSE` - Whether or not to use embeds when responding (new features will be developed for true).
+- `DEFAULT_TTS_SPEAKER` - Used when no speaker is specified in a TTS command.
+- `TOKEN_RESET_TIME` - Amount of time (in milliseconds) until the token count resets.
+- `TOKEN_NUM` - Amount of maximum completion tokens (doesn't include prompt tokens) that can be used in the time above (applies to all users).
+  - If TOKEN_RESET_TIME or TOKEN_NUM are 0 or not set, token limit will be ignored.
 
-These env vars are dynamic based on the personality. Use "\<p>" as a placeholder for the personality name:
+These env vars are dynamic based on the personality. Use \<p> or \<m> as a placeholder for the dynamic messages:
 - `DYNAMIC_RESET_MSG` - Bot message for single personality reset.
 - `DYNAMIC_TITLE_MSG` - Bot message for the title of embeds. Will be wrapped in \*\* \*\*.
+- `TOKEN_LIMIT_MSG` - Bot message for when the token limit is reached.
 
 Personalities:
 - `personality_NAME_thumbnail` - The thumbnail for the bot embed picture, optional

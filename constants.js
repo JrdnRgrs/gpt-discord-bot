@@ -111,22 +111,30 @@ const ADMIN_ID = process.env.ADMIN_ID;
 // Setup const defaults for non-sensitive env vars
 const modelName = process.env.GPT_MODEL ? process.env.GPT_MODEL : "gpt-3.5-turbo-0301";
 const BASE_URL = process.env.BASE_URL ? process.env.BASE_URL : 'https://api16-normal-c-useast1a.tiktokv.com/media/api/text/speech/invoke';
-const DISABLED_MSG = process.env.DISABLED_MSG ? process.env.DISABLED_MSG : "Sorry, I am disabled.";
-const DISABLED_REPLIES = process.env.DISABLED_REPLIES ? process.env.DISABLED_REPLIES : "true";
-const COMMAND_PERM_MSG = process.env.COMMAND_PERM_MSG ? process.env.COMMAND_PERM_MSG : "Sorry, you don't have the permissions to use that command.";
+
+// Messages
 const ENABLE_MSG = process.env.ENABLE_MSG ? process.env.ENABLE_MSG : "I am enabled.";
-const DISABLE_MSG = process.env.DISABLE_MSG ? process.env.DISABLE_MSG : "I am disabled";
 const RESET_MSG = process.env.RESET_MSG ? process.env.RESET_MSG : "I have been reset";
+const DISABLE_MSG = process.env.DISABLE_MSG ? process.env.DISABLE_MSG : "I am disabled";
+const DISABLED_MSG = process.env.DISABLED_MSG ? process.env.DISABLED_MSG : "Sorry, I am disabled.";
+const COMMAND_PERM_MSG = process.env.COMMAND_PERM_MSG ? process.env.COMMAND_PERM_MSG : "Sorry, you don't have the permissions to use that command.";
 const DYNAMIC_RESET_MSG = process.env.DYNAMIC_RESET_MSG ? process.env.DYNAMIC_RESET_MSG : "<p> has been reset.";
-const RESET_ERROR_MSG = process.env.RESET_ERROR_MSG ? process.env.RESET_ERROR_MSG : 'Invalid usage. Use "!reset all" or "!reset <personality_name>"';
+const DYNAMIC_TITLE_MSG = process.env.DYNAMIC_TITLE_MSG ? process.env.DYNAMIC_TITLE_MSG : "<p> says:";
+const RESET_ERROR_MSG = process.env.RESET_ERROR_MSG ? process.env.RESET_ERROR_MSG : 'Invalid usage. Use "/reset all" or "/reset <personality_name>"';
 const PERSONALITY_MSG = process.env.PERSONALITY_MSG ? process.env.PERSONALITY_MSG : 'Available Personalities:';
+const API_ERROR_MSG = process.env.API_ERROR_MSG ? process.env.BOT_REPLIES : "API request failed.";
+const TOKEN_LIMIT_MSG = process.env.TOKEN_LIMIT_MSG ? process.env.TOKEN_LIMIT_MSG : "Token limit reached. Try again in <m> minutes.";
+const TOKEN_RESET_MSG = process.env.TOKEN_RESET_MSG ? process.env.TOKEN_RESET_MSG : "Token count reset.";
+
+// Options
 const CASE_MODE = process.env.CASE_MODE ? process.env.CASE_MODE : "";
 const REPLY_MODE = process.env.REPLY_MODE ? process.env.REPLY_MODE : "false";
 const BOT_REPLIES = process.env.BOT_REPLIES ? process.env.BOT_REPLIES : "false";
-const API_ERROR_MSG = process.env.API_ERROR_MSG ? process.env.BOT_REPLIES : "API request failed.";
-const DYNAMIC_TITLE_MSG = process.env.DYNAMIC_TITLE_MSG ? process.env.DYNAMIC_TITLE_MSG : "<p> says:";
 const EMBED_RESPONSE = process.env.EMBED_RESPONSE ? process.env.EMBED_RESPONSE : "true";
+const DISABLED_REPLIES = process.env.DISABLED_REPLIES ? process.env.DISABLED_REPLIES : "true";
 const DEFAULT_TTS_SPEAKER = process.env.DEFAULT_TTS_SPEAKER ? process.env.DEFAULT_TTS_SPEAKER : "rocket";
+const TOKEN_RESET_TIME = process.env.TOKEN_RESET_TIME;
+const TOKEN_NUM = process.env.TOKEN_NUM;
 
 module.exports = {
     voiceMapping,
@@ -152,5 +160,9 @@ module.exports = {
     DYNAMIC_TITLE_MSG,
     EMBED_RESPONSE,
     DYNAMIC_TITLE_MSG,
-    DEFAULT_TTS_SPEAKER
+    DEFAULT_TTS_SPEAKER,
+    TOKEN_LIMIT_MSG,
+    TOKEN_RESET_MSG,
+    TOKEN_RESET_TIME,
+    TOKEN_NUM
   };
