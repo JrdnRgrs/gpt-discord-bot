@@ -13,7 +13,7 @@ module.exports = {
 	async execute(interaction) {
         // Commands to execute
         // Check admin state
-        if (!isAdmin(interaction)) {
+        if (!isAdmin(interaction, true)) {
             await interaction.reply("Only bot admins can run this command.");
             return;
         }

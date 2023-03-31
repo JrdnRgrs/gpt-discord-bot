@@ -100,10 +100,7 @@ client.on('messageCreate', async msg => {
 		}
 	}
 	if (p == null) return;
-	// Check if bot disabled/enabled
-	// if (!await disableCheck(msg, state)) {
-	// 	return;
-	// }
+
 	// Check permissions and tokens
     const permissionCheckResult = await checkTokens(msg, state);
     if (!permissionCheckResult.result) {
@@ -177,7 +174,6 @@ async function chat(requestX, msg){
 		// Return response
 		return responseContent;
 	} catch (error) {
-		//console.error('API request failed:', error);
 		console.error(`[${formatDate(new Date())}] [ERROR] OpenAI API request failed: ${error}`);
 		return API_ERROR_MSG;
 	}
