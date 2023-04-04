@@ -10,6 +10,7 @@ COPY README.md .
 COPY ./voices/ .
 RUN mkdir commands
 COPY ./commands/*.js commands/
+COPY ./events/*.js events/
 
 RUN npm ci
 
