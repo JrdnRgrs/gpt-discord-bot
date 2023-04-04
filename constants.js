@@ -135,6 +135,7 @@ const DISABLED_REPLIES = process.env.DISABLED_REPLIES ? process.env.DISABLED_REP
 const DEFAULT_TTS_SPEAKER = process.env.DEFAULT_TTS_SPEAKER ? process.env.DEFAULT_TTS_SPEAKER : "rocket";
 const TOKEN_RESET_TIME = process.env.TOKEN_RESET_TIME;
 const TOKEN_NUM = process.env.TOKEN_NUM;
+const MSG_LIMIT = process.env.MSG_LIMIT ? process.env.DEFAULT_TTS_SPEAKER : 100;
 
 module.exports = {
     voiceMapping,
@@ -164,5 +165,6 @@ module.exports = {
     TOKEN_LIMIT_MSG,
     TOKEN_RESET_MSG,
     TOKEN_RESET_TIME,
-    TOKEN_NUM
+    TOKEN_NUM,
+    MSG_LIMIT
   };

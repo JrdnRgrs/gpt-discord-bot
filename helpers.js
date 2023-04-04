@@ -1,5 +1,5 @@
 // Global functions file
-const { BASE_URL, REPLY_MODE, SESSION_ID, ADMIN_ID, DYNAMIC_TITLE_MSG, DISABLED_MSG, DISABLED_REPLIES, TOKEN_LIMIT_MSG, TOKEN_RESET_TIME, TOKEN_NUM} = require('./constants');
+const { BASE_URL, REPLY_MODE, SESSION_ID, ADMIN_ID, DYNAMIC_TITLE_MSG, DISABLED_MSG, DISABLED_REPLIES, TOKEN_LIMIT_MSG, TOKEN_RESET_TIME, TOKEN_NUM, API_ERROR_MSG, modelName, CASE_MODE} = require('./constants');
 // Require TikTok TTS package and store sessionID and URL
 const { config, createAudioFromText } = require('tiktok-tts');
 config(SESSION_ID, BASE_URL);
@@ -90,6 +90,46 @@ async function checkTokens(msg, state) {
     return { result: true };
 }
 
+// API request function
+async function chat(requestX, msg, state, openai){
+	try {
+		// Make API request
+		const completion = await openai.createChatCompletion({
+			model: modelName,
+			messages: requestX
+		});
+
+		// Increase token counter if not admin
+		if (!isAdmin(msg, false)) {
+			state.tokenCount += completion.data.usage.completion_tokens;
+		}
+		
+		let responseContent;
+
+		// Check capitlization mode
+		switch (CASE_MODE) {
+			case "":
+				responseContent = completion.data.choices[0].message.content;
+				break;
+			case "upper":
+				responseContent = completion.data.choices[0].message.content.toUpperCase();
+				break;
+			case "lower":
+				responseContent = completion.data.choices[0].message.content.toLowerCase();
+				break;
+			default:
+				console.log('[WARNING] Invalid CASE_MODE value. Please change and restart bot.');
+		}
+		// Add assistant message to next request
+		requestX.push({"role": "assistant", "content": `${completion.data.choices[0].message.content}`});
+
+		// Return response
+		return responseContent;
+	} catch (error) {
+		console.error(`[${formatDate(new Date())}] [ERROR] OpenAI API request failed: ${error}`);
+		return API_ERROR_MSG;
+	}
+}
 
 // // Initialize personalities function
 function initPersonalities(personalities, env) {
@@ -279,5 +319,6 @@ module.exports = {
     getPersonality,
     initPersonalities,
     getPersonalityEmbed,
-	checkTokens
+	checkTokens,
+    chat
   };
