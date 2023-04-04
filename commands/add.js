@@ -1,5 +1,5 @@
 // Requre the necessary discord.js classes
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 const { canProceed } = require('../helpers');
 const { DISABLED_MSG, UPDATE_PERSONALITY_MSG, UPDATE_PERS_ERROR_MSG, ADDED_PERSONALITY_MSG } = require('../constants');
 
@@ -15,6 +15,7 @@ module.exports = {
             option.setName('prompt')
                 .setDescription('The prompt for the new personality.')
                 .setRequired(true))
+        .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
         .setDMPermission(false),
     async execute(interaction, state) {
         // Commands to execute
