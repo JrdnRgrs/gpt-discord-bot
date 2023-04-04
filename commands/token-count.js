@@ -1,6 +1,6 @@
 // Requre the necessary discord.js classes
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { TOKEN_COUNT_MSG, TOKEN_NUM, TOKEN_RESET_TIME } = require('../constants');
+const { TOKEN_NUM, TOKEN_RESET_TIME } = require('../constants');
 const { isAdmin, canProceed } = require('../helpers');
 // Initialize .env file
 require('dotenv').config({ path: '/.env'});

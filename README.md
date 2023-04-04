@@ -66,11 +66,15 @@ Use the following environment variables to configure certain features:
 - `TOKEN_RESET_TIME` - Amount of time (in milliseconds) until the token count resets.
 - `TOKEN_NUM` - Amount of maximum completion tokens (doesn't include prompt tokens) that can be used in the time above (applies to all users).
   - If `TOKEN_RESET_TIME` or `TOKEN_NUM` are 0 or not set, token limit will be ignored.
+- `MSG_LIMIT` - Number of messages to keep in conversation history. (includes user and bot messages)
+  - If `MSG_LIMIT` is 0 or not set, message limit will be ignored
 
-These env vars are dynamic based on the personality. Use \<p> or \<m> as a placeholder for the dynamic messages:
+These env vars are dynamic based on the personality. See `.env.example` for usage:
 - `DYNAMIC_RESET_MSG` - Bot message for single personality reset.
 - `DYNAMIC_TITLE_MSG` - Bot message for the title of embeds. Will be wrapped in \*\* \*\*.
 - `TOKEN_LIMIT_MSG` - Bot message for when the token limit is reached.
+- `TOKEN_RESET_MSG` - Bot message when `/token-reset` is used.
+- `ADDED_PERSONALITY_MSG` - Bot message when a new personality is added.
 
 Personalities:
 - `personality_NAME_thumbnail` - The thumbnail for the bot embed picture, optional
