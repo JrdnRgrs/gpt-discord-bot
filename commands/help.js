@@ -1,6 +1,6 @@
 // Requre the necessary discord.js classes
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { disableCheck } = require('../helpers');
+const { canProceed } = require('../helpers');
 const { DISABLED_MSG } = require('../constants');
 const fs = require('fs');
 const { resolve } = require('path');
@@ -12,7 +12,7 @@ module.exports = {
         .setDescription('List of all the commands you can use with the bot.'),
     async execute(interaction, state) {
         // Check admin/pause state
-        if (!await disableCheck(interaction, state, DISABLED_MSG)) {
+        if (!(await canProceed(undefined, interaction, state)).result) {
             return;
         }
         // create an embed object

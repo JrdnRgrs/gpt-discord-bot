@@ -25,7 +25,9 @@ let state = {
 	timer: null,
 	tokenCount: null,
 	startTime: new Date(),
-	totalTokenCount: 0
+	totalTokenCount: 0,
+	nonAdminTokenCount: 0,
+  	adminTokenCount: 0
 };
 // Initialize personalities
 initPersonalities(state.personalities, process.env);

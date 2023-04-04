@@ -13,10 +13,16 @@ const { exec } = require('child_process');
 // General functions for the bot
 // Set admin user IDs
 const adminId = ADMIN_ID.split(',');
-// Check message author id function
-function isAdmin(target, isInteraction) {
-    const member = isInteraction ? target.member : target.member;
-    const user = isInteraction ? target.user : target.author;
+function isAdmin(msg) {
+	if (msg.member.permissions.has(PermissionFlagsBits.Administrator) || msg.member.permissions.has(PermissionFlagsBits.ManageMessages)) {
+		return true;
+	} else {
+		return isAdminInAdminId(msg.author.id);
+	}
+}
+function isAdminInteraction(interaction) {
+    const member = interaction.member;
+    const user = interaction.user || interaction.author;
 
     if (!member || !user) {
         return false;
@@ -25,30 +31,56 @@ function isAdmin(target, isInteraction) {
     if (member.permissions.has(PermissionFlagsBits.Administrator) || member.permissions.has(PermissionFlagsBits.ManageMessages)) {
         return true;
     } else {
-        return adminId.includes(user.id);
+        return isAdminInAdminId(user.id);
     }
 }
 
-async function disableCheck(target, state, dis_response) {
-	const isInteraction = target.isCommand?.();
+async function disableCheck(message, interaction, state, disabledMessage, isMessage) {
+    const isAdminCheck = isMessage
+        ? isAdmin(message)
+        : interaction
+        ? isAdminInteraction(interaction)
+        : false;
 
-    if (!isAdmin(target, isInteraction) && state.isPaused === true) {
-        if (!isInteraction) {
-			if (DISABLED_REPLIES === "true") {
-				sendCmdResp(target, dis_response);
-			}else{
-				// Respond in DM
-				//await target.author.send(dis_response);
-				return;
-			}
-			
-        } else {
-            await target.reply({ content: dis_response, ephemeral: true });
+    if (state.isPaused && !isAdminCheck) {
+        if (isMessage && message) {
+            sendCmdResp(message, disabledMessage);
+        } else if (interaction) {
+            await interaction.reply({ content: disabledMessage, ephemeral: true });
         }
         return false;
     }
-
     return true;
+}
+async function canProceed(message, interaction, state, strict = false) {
+    const isMessage = message !== undefined;
+    const isInteraction = interaction !== undefined;
+    const isAdminCheck = isMessage
+        ? isAdmin(message)
+        : isInteraction
+        ? isAdminInteraction(interaction)
+        : false;
+
+    const disableCheckResult = await disableCheck(
+        message,
+        interaction,
+        state,
+        DISABLED_MSG,
+        isMessage
+    );
+    if (!disableCheckResult) {
+        return { result: false, isAdmin: isAdminCheck };
+    }
+
+    if (strict && (!isAdminCheck || !isAdminInAdminId(isMessage ? message.author.id : interaction.user.id))) {
+        return { result: false, isAdmin: false };
+    }
+
+    return { result: true, isAdmin: isAdminCheck };
+}
+
+function isAdminInAdminId(userId) {
+    return adminId.includes(userId);
 }
 // Send command responses function
 function sendCmdResp(msg, cmdResp, useReply = false) {
@@ -61,8 +93,8 @@ function sendCmdResp(msg, cmdResp, useReply = false) {
 // Check tokens function
 async function checkTokens(msg, state) {
     // Check if admin and if the bot is disabled/enabled
-    const disableCheckResult = await disableCheck(msg, state, DISABLED_MSG);
-    if (!disableCheckResult) {
+    const disableCheckResult = await canProceed(msg, undefined, state);
+    if (!disableCheckResult.result) {
         return { result: false };
     }
 
@@ -72,7 +104,7 @@ async function checkTokens(msg, state) {
 	}
 
     // Token limit check
-    if (!isAdmin(msg, false)) {
+    if (!disableCheckResult.isAdmin) {
         timePassed = Math.abs(new Date() - state.timer);
         // Set variables on first start or when time exceeds timer
         if (timePassed >= parseInt(TOKEN_RESET_TIME, 10) || state.timer === null) {
@@ -81,7 +113,7 @@ async function checkTokens(msg, state) {
         }
 
 		// Send message when token limit reached
-        if (timePassed < parseInt(TOKEN_RESET_TIME, 10) && state.tokenCount >= parseInt(TOKEN_NUM, 10)) {
+        if (timePassed < parseInt(TOKEN_RESET_TIME, 10) && state.nonAdminTokenCount >= parseInt(TOKEN_NUM, 10)) {
             sendCmdResp(msg, TOKEN_LIMIT_MSG.replace("<m>", Math.round((parseInt(TOKEN_RESET_TIME, 10) - timePassed) / 60000 * 10) / 10));
             return { result: false };
         }
@@ -99,10 +131,14 @@ async function chat(requestX, msg, state, openai){
 			messages: requestX
 		});
 
-		// Increase token counter if not admin
-		if (!isAdmin(msg, false)) {
-			state.tokenCount += completion.data.usage.completion_tokens;
+		// Increase token counter based on user's admin status
+		if (isAdmin(msg)) {
+			state.adminTokenCount += completion.data.usage.completion_tokens;
+		  } else {
+			state.nonAdminTokenCount += completion.data.usage.completion_tokens;
 		}
+		// Increase total token count
+		state.totalTokenCount += completion.data.usage.total_tokens;
 		
 		let responseContent;
 
@@ -309,7 +345,10 @@ async function textToSpeech(speaker, text) {
 
 module.exports = {
     isAdmin,
+	isAdminInAdminId,
+	isAdminInteraction,
     splitMessage,
+	canProceed,
 	disableCheck,
     sendCmdResp,
     mergeAudioFiles,

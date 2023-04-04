@@ -1,7 +1,7 @@
 // Requre the necessary discord.js classes
 const { SlashCommandBuilder } = require('discord.js');
 const { voiceMapping, DISABLED_MSG } = require('../constants');
-const { disableCheck } = require('../helpers');
+const { canProceed } = require('../helpers');
 const fs = require('fs');
 const path = require('path');
 
@@ -44,7 +44,7 @@ module.exports = {
         ),
     async execute(interaction, state) {
         // Check admin/pause state
-        if (!await disableCheck(interaction, state, DISABLED_MSG)) {
+        if (!(await canProceed(undefined, interaction, state)).result) {
             return;
         }
         

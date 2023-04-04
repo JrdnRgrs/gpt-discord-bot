@@ -19,6 +19,8 @@ module.exports = {
     async execute(interaction, state) {
         // Reset the token count
         state.tokenCount = 0;
+        state.nonAdminTokenCount = 0;
+        state.adminTokenCount = 0;
         await interaction.reply(TOKEN_RESET_MSG);
     },
 };

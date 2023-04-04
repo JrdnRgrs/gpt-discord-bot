@@ -30,7 +30,12 @@ module.exports = {
         if (!permissionCheckResult.result) {
             return;
         }
-
+        // Check if it is a new month
+        let today = new Date();
+        if (state.startTime.getUTCMonth() !== today.getUTCMonth()) {
+            state.startTime = new Date();
+            state.totalTokenCount = 0;
+        }
         // Add user message to request
         p.request.push({"role": "user", "content": `${msg.content}`});
         // Truncate conversation if # of messages in conversation exceed MSG_LIMIT

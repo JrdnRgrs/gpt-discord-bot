@@ -2,7 +2,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { voiceDescriptions, ne_voiceDescriptions, DISABLED_MSG } = require('../constants');
 const { EmbedBuilder } = require('discord.js');
-const { disableCheck } = require('../helpers');
+const { canProceed } = require('../helpers');
 
 // merge voice names if multiple numbers. Outputs like us_male1,2,3,4
 function groupVoiceDescriptions(voiceDescriptions) {
@@ -67,7 +67,7 @@ module.exports = {
             .setRequired(false)),
     async execute(interaction, state) {
         // Check admin/pause state
-        if (!await disableCheck(interaction, state, DISABLED_MSG)) {
+        if (!(await canProceed(undefined, interaction, state)).result) {
             return;
         }
 
