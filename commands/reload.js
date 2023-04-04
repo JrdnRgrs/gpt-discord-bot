@@ -9,7 +9,8 @@ module.exports = {
 		.addStringOption(option =>
 			option.setName('command')
 				.setDescription('The command to reload.')
-				.setRequired(true)),
+				.setRequired(true))
+        .setDMPermission(false),
 	async execute(interaction) {
         // Commands to execute
         // Check admin state

@@ -1,9 +1,7 @@
 // Requre the necessary discord.js classes
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { disableCheck } = require('../helpers');
 const { PERSONALITY_MSG, DISABLED_MSG } = require('../constants');
-const { EmbedBuilder } = require('discord.js');
-
 
 module.exports = {
     data: new SlashCommandBuilder()

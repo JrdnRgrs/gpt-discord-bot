@@ -6,7 +6,7 @@ require('dotenv').config({ path: '/.env'});
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('tokenreset')
+        .setName('token-reset')
         .setDescription('Reset the token count.')
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
         .addBooleanOption(option =>
@@ -14,22 +14,11 @@ module.exports = {
                 .setName('show_count')
                 .setDescription('Display the current token count.')
                 .setRequired(false)
-        ),
+        )
+        .setDMPermission(false),
     async execute(interaction, state) {
-        const showCount = interaction.options.getBoolean('show_count');
-        let allowed_token;
-        if(!TOKEN_NUM || parseInt(TOKEN_NUM, 10) === 0 ) {
-            allowed_token = "∞";
-        }else{
-            allowed_token = TOKEN_NUM;
-        }
-        if (showCount) {
-            // Display the current token count
-            await interaction.reply(`Current token count: ${state.tokenCount} of ${allowed_token}`);
-        } else {
-            // Reset the token count
-            state.tokenCount = 0;
-            await interaction.reply(TOKEN_RESET_MSG);
-        }
+        // Reset the token count
+        state.tokenCount = 0;
+        await interaction.reply(TOKEN_RESET_MSG);
     },
 };

@@ -23,7 +23,9 @@ let state = {
 	isPaused: false,
 	personalities: [],
 	timer: null,
-	tokenCount: null
+	tokenCount: null,
+	startTime: new Date(),
+	totalTokenCount: 0
 };
 // Initialize personalities
 initPersonalities(state.personalities, process.env);

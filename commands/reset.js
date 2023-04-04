@@ -13,7 +13,8 @@ module.exports = {
             option.setName('personality')
                 .setDescription('The personality to delete the memory of or "all"')
                 .setRequired(true)
-        ),
+        )
+        .setDMPermission(false),
     async execute(interaction, state) {
         // Check admin/pause state
         if (!await disableCheck(interaction, state, DISABLED_MSG)) {

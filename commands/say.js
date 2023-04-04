@@ -74,7 +74,8 @@ module.exports = {
                     { name: 'kr_female', value: 'kr_003' },
                     { name: 'kr_male2', value: 'kr_004' },
                 ),
-        ),
+        )
+        .setDMPermission(false),
     async execute(interaction, state) {
         // Check admin/pause state
         if (!await disableCheck(interaction, state, DISABLED_MSG)) {
