@@ -14,12 +14,17 @@ const { exec } = require('child_process');
 // Set admin user IDs
 const adminId = ADMIN_ID.split(',');
 function isAdmin(msg) {
-	if (msg.member.permissions.has(PermissionFlagsBits.Administrator) || msg.member.permissions.has(PermissionFlagsBits.ManageMessages)) {
-		return true;
-	} else {
-		return isAdminInAdminId(msg.author.id);
-	}
+    if (!msg.member || !msg.author) {
+        return false;
+    }
+
+    if (msg.member.permissions.has(PermissionFlagsBits.Administrator) || msg.member.permissions.has(PermissionFlagsBits.ManageMessages)) {
+        return true;
+    } else {
+        return isAdminInAdminId(msg.author.id);
+    }
 }
+
 function isAdminInteraction(interaction) {
     const member = interaction.member;
     const user = interaction.user || interaction.author;
@@ -34,7 +39,6 @@ function isAdminInteraction(interaction) {
         return isAdminInAdminId(user.id);
     }
 }
-
 async function disableCheck(message, interaction, state, disabledMessage, isMessage) {
     const isAdminCheck = isMessage
         ? isAdmin(message)
@@ -55,11 +59,13 @@ async function disableCheck(message, interaction, state, disabledMessage, isMess
 async function canProceed(message, interaction, state, strict = false) {
     const isMessage = message !== undefined;
     const isInteraction = interaction !== undefined;
-    const isAdminCheck = isMessage
-        ? isAdmin(message)
-        : isInteraction
-        ? isAdminInteraction(interaction)
-        : false;
+    let isAdminCheck = false;
+
+    if (isMessage) {
+        isAdminCheck = isAdmin(message);
+    } else if (isInteraction) {
+        isAdminCheck = isAdminInteraction(interaction);
+    }
 
     const disableCheckResult = await disableCheck(
         message,

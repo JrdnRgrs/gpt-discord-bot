@@ -123,10 +123,18 @@ module.exports = {
             } else {
                 messageContent = lastBotMessage.content.trim().replace(/^[^:]*:\s*/, '');
             }
-            const voice = voiceMapping[speakerKey];
+            //const voice = voiceMapping[speakerKey];
+            const reverseVoiceMapping = {};
+            for (const key in voiceMapping) {
+                reverseVoiceMapping[voiceMapping[key]] = key;
+            }
+
+            const speaker = voiceMapping[reverseVoiceMapping[speakerKey]];
+
 
             try {
-                const audioFilename = await textToSpeech(voice, messageContent);
+                //const audioFilename = await textToSpeech(voice, messageContent);
+                const audioFilename = await textToSpeech(speaker, messageContent);
 
                 await interaction.reply({
                     files: [{
