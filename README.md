@@ -43,17 +43,18 @@ Once the server is started, simply send a message containing the personality nam
 
 **Note:** for both tts commands, options `speaker` or `speaker2` are available. `speaker` contains english speaking voices, and `speaker2` contains any remaining voices. You may **ONLY** specify **ONE** of these.
 ### Commands
-- `/enable`: Enables the bot.
-- `/disable`: Disables the bot.
-- `/reset [all,<personality_name>]`: Resets the memory of all personalities or a single personality. If personality is ephemeral, sets its prompt to `undefined`.
+- `/enable`: ***(Admins ONLY)*** Enables the bot.
+- `/disable`: ***(Admins ONLY)*** Disables the bot.
+- `/reset [all,<personality_name>]`: ***(Admins ONLY)*** Resets the memory of all personalities or a single personality. If personality is ephemeral, sets its prompt to `undefined`.
 - `/personality`: Displays all personalities and their prompts.
 - `/add-personality <name> <prompt>`: Adds an ephemeral personality to the bot, it will be lost when the bot restarts. Can also update `undefined` prompts. 
 - `/tts [<text>,<messageID>] <speaker>`: Generates TTS for given text or message ID. 
 - `/say [<number>,<messageID>] <speaker>`: Generates TTS for a bot message `<number>` messages back or a message ID. With no input, uses the last message with `rocket`. Both arguments are optional.
 - `/speakers`: Displays speakers available to the `/tts` and `/say` commands. Specify `all` to display extra and non-english voices as well.
 - `/sample <speaker>`: Listen to samples of each available speaker to the `/tts` and `/say` commands.
+- `/token-count`: Check the current token count and reset time of the bot.
 - `/reload`: ***(Admins ONLY)*** Reload a command if the code for it has changed.
-- `/tokenreset`: ***(Admins ONLY)*** Reset the token count for the bot. Use with `show_count` to only display current token count.
+- `/token-reset`: ***(Admins ONLY)*** Reset the token count for the bot.
 - `/help`: Displays a help message with all available commands. 
 ### Config Environment Variables
 
