@@ -12,44 +12,39 @@ module.exports = {
         .setDescription('List of all the commands you can use with the bot.'),
     async execute(interaction, state) {
         // Check admin/pause state
-        if (!(await canProceed(undefined, interaction, state)).result) {
+        const proceedResult = await canProceed(undefined, interaction, state);
+        if (!proceedResult.result) {
             return;
         }
-        // create an embed object
-        let helpEmbed = new EmbedBuilder()
-            .setColor(0x0099FF) // set the color of the embed
-            .setTitle('**Bot Commands**') // set the title of the embed
-            .setDescription('Here are some commands you can use'); // set the description of the embed
+        const isAdminUser = proceedResult.isAdmin;
 
-        // Manual way, in case README method is not wanted
-        // add fields to the embed for each command and its usage
-        // helpEmbed.addFields(
-        //     { name: `/enable`, value: 'Enables the bot.' },
-        //     { name: `/disable`, value: 'Disables the bot.' },
-        //     { name: `/reset`, value: `Resets the memory of all personalities or a single personality. \n \`/reset [all,<personality_name>]\`` },
-        //     { name: `/personality`, value: 'Displays all personalities and their prompts.' },
-        //     { name: `/tts`, value: `Generates TTS for a message. \n \`/tts [<text>,<messageID>] <speaker>\`` },
-        //     { name: `/say`, value: `Generates TTS for a bot message. With no input, uses the last message with \`rocket\`. Both arguments are optional. \n \`/say [<number>,<messageID>] <speaker>\`` },
-        //     { name: `/speakers`, value: `Displays all TTS speakers available to the \`/tts\` command.` },
-        //     { name: `/sample`, value:`Listen to samples of each available speaker to the \`/tts\` command. \n \`/sample <speaker>\``},
-        //     { name: `/add-personality`, value:`Add a personality to the bot. \n \`/add-personality <name> <prompt>\``},
-        //     { name: `/help`, value:'Displays this help message.'}
-        // );
+        // Create an embed object
+        let helpEmbed = new EmbedBuilder()
+            .setColor(0x0099FF) // Set the color of the embed
+            .setTitle('**Bot Commands**') // Set the title of the embed
+            .setDescription('Here are some commands you can use'); // Set the description of the embed
 
         // Read the contents of the readme file
         const readmePath = resolve(__dirname, '../README.md');
         const readmeContents = fs.readFileSync(readmePath, 'utf-8');
+
         // Parse the contents of the file to generate the help message
         // From '### Commands' to the next '###'
         const commands = readmeContents.match(/### Commands([\s\S]*?)###/)[1].trim().split('\n');
-        // add fields to the embed for each command and its usage
+
+        // Add fields to the embed for each command and its usage
         commands.forEach(command => {
             const [name, value] = command.split(':');
-            // Remove the '- ' at the beginning of each line.
-            helpEmbed.addFields({ name: name.trim().replace(/^- /g, ''), value: value.trim() });
+
+            // Check if the command is for admins only and if the user is an admin
+            const isAdminCommand = value.includes('***(Admins ONLY)***');
+            if (!isAdminCommand || (isAdminCommand && isAdminUser)) {
+                // Remove the '- ' at the beginning of each line.
+                helpEmbed.addFields({ name: name.trim().replace(/^- /g, ''), value: value.trim() });
+            }
         });
-    
+
         // Send variable
-        interaction.reply({ embeds: [helpEmbed] });
+        interaction.reply({ embeds: [helpEmbed], ephemeral: true  });
     },
 };

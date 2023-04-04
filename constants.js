@@ -128,7 +128,6 @@ const TOKEN_RESET_MSG = process.env.TOKEN_RESET_MSG ? process.env.TOKEN_RESET_MS
 const ADDED_PERSONALITY_MSG = process.env.ADDED_PERSONALITY_MSG ? process.env.ADDED_PERSONALITY_MSG : "New personality <n> added.";
 const UPDATE_PERSONALITY_MSG = process.env.UPDATE_PERSONALITY_MSG ? process.env.UPDATE_PERSONALITY_MSG : "Updated the prompt for the existing personality \"<n>\".";
 const UPDATE_PERS_ERROR_MSG = process.env.UPDATE_PERS_ERROR_MSG ? process.env.UPDATE_PERS_ERROR_MSG : "A personality with this name already exists. Please choose a different name.";
-const TOKEN_COUNT_MSG = process.env.TOKEN_COUNT_MSG ? process.env.TOKEN_COUNT_MSG : "<t> tokens have been used since <d>.";
 
 // Options
 const CASE_MODE = process.env.CASE_MODE ? process.env.CASE_MODE : "";
@@ -173,6 +172,5 @@ module.exports = {
     MSG_LIMIT,
     ADDED_PERSONALITY_MSG,
     UPDATE_PERSONALITY_MSG,
-    UPDATE_PERS_ERROR_MSG,
-    TOKEN_COUNT_MSG
+    UPDATE_PERS_ERROR_MSG
   };

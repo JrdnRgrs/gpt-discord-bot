@@ -43,17 +43,18 @@ Once the server is started, simply send a message containing the personality nam
 
 **Note:** for both tts commands, options `speaker` or `speaker2` are available. `speaker` contains english speaking voices, and `speaker2` contains any remaining voices. You may **ONLY** specify **ONE** of these.
 ### Commands
-- `/enable`: Enables the bot.
-- `/disable`: Disables the bot.
-- `/reset [all,<personality_name>]`: Resets the memory of all personalities or a single personality. If personality is ephemeral, sets its prompt to `undefined`.
+- `/enable`: ***(Admins ONLY)*** Enables the bot.
+- `/disable`: ***(Admins ONLY)*** Disables the bot.
+- `/reset [all,<personality_name>]`: ***(Admins ONLY)*** Resets the memory of all personalities or a single personality. If personality is ephemeral, sets its prompt to `undefined`.
 - `/personality`: Displays all personalities and their prompts.
 - `/add-personality <name> <prompt>`: Adds an ephemeral personality to the bot, it will be lost when the bot restarts. Can also update `undefined` prompts. 
 - `/tts [<text>,<messageID>] <speaker>`: Generates TTS for given text or message ID. 
 - `/say [<number>,<messageID>] <speaker>`: Generates TTS for a bot message `<number>` messages back or a message ID. With no input, uses the last message with `rocket`. Both arguments are optional.
 - `/speakers`: Displays speakers available to the `/tts` and `/say` commands. Specify `all` to display extra and non-english voices as well.
 - `/sample <speaker>`: Listen to samples of each available speaker to the `/tts` and `/say` commands.
+- `/token-count`: Check the current token count and reset time of the bot.
 - `/reload`: ***(Admins ONLY)*** Reload a command if the code for it has changed.
-- `/tokenreset`: ***(Admins ONLY)*** Reset the token count for the bot. Use with `show_count` to only display current token count.
+- `/token-reset`: ***(Admins ONLY)*** Reset the token count for the bot.
 - `/help`: Displays a help message with all available commands. 
 ### Config Environment Variables
 
@@ -65,11 +66,15 @@ Use the following environment variables to configure certain features:
 - `TOKEN_RESET_TIME` - Amount of time (in milliseconds) until the token count resets.
 - `TOKEN_NUM` - Amount of maximum completion tokens (doesn't include prompt tokens) that can be used in the time above (applies to all users).
   - If `TOKEN_RESET_TIME` or `TOKEN_NUM` are 0 or not set, token limit will be ignored.
+- `MSG_LIMIT` - Number of messages to keep in conversation history. (includes user and bot messages)
+  - If `MSG_LIMIT` is 0 or not set, message limit will be ignored
 
-These env vars are dynamic based on the personality. Use \<p> or \<m> as a placeholder for the dynamic messages:
+These env vars are dynamic based on the personality. See `.env.example` for usage:
 - `DYNAMIC_RESET_MSG` - Bot message for single personality reset.
 - `DYNAMIC_TITLE_MSG` - Bot message for the title of embeds. Will be wrapped in \*\* \*\*.
 - `TOKEN_LIMIT_MSG` - Bot message for when the token limit is reached.
+- `TOKEN_RESET_MSG` - Bot message when `/token-reset` is used.
+- `ADDED_PERSONALITY_MSG` - Bot message when a new personality is added.
 
 Personalities:
 - `personality_NAME_thumbnail` - The thumbnail for the bot embed picture, optional
