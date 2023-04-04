@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
-const { isAdmin,formatDate } = require('../helpers');
+const { isAdmin, formatDate, isAdminInteraction, isAdminInAdminId } = require('../helpers');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -9,11 +9,12 @@ module.exports = {
 		.addStringOption(option =>
 			option.setName('command')
 				.setDescription('The command to reload.')
-				.setRequired(true)),
+				.setRequired(true))
+        .setDMPermission(false),
 	async execute(interaction) {
         // Commands to execute
         // Check admin state
-        if (!isAdmin(interaction, true)) {
+        if (!isAdminInAdminId(interaction.user.id)) {
             await interaction.reply("Only bot admins can run this command.");
             return;
         }

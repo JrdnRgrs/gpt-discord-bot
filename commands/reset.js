@@ -1,6 +1,6 @@
 // Require the necessary node classes
 const { SlashCommandBuilder } = require('discord.js');
-const { disableCheck, initPersonalities } = require('../helpers');
+const { canProceed, initPersonalities } = require('../helpers');
 const { RESET_ERROR_MSG, RESET_MSG, DYNAMIC_RESET_MSG, DISABLED_MSG } = require('../constants');
 
 // Reset bot command
@@ -13,10 +13,11 @@ module.exports = {
             option.setName('personality')
                 .setDescription('The personality to delete the memory of or "all"')
                 .setRequired(true)
-        ),
+        )
+        .setDMPermission(false),
     async execute(interaction, state) {
         // Check admin/pause state
-        if (!await disableCheck(interaction, state, DISABLED_MSG)) {
+        if (!(await canProceed(undefined, interaction, state)).result) {
             return;
         }
         // Delete all memories if option is "all"

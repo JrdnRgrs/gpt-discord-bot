@@ -1,6 +1,6 @@
 // Requre the necessary discord.js classes
 const { SlashCommandBuilder } = require('discord.js');
-const { disableCheck, textToSpeech  } = require('../helpers');
+const { canProceed, textToSpeech  } = require('../helpers');
 const { voiceMapping, DEFAULT_TTS_SPEAKER, DISABLED_MSG } = require('../constants');
 const fs = require('fs');
 
@@ -74,10 +74,11 @@ module.exports = {
                     { name: 'kr_female', value: 'kr_003' },
                     { name: 'kr_male2', value: 'kr_004' },
                 ),
-        ),
+        )
+        .setDMPermission(false),
     async execute(interaction, state) {
         // Check admin/pause state
-        if (!await disableCheck(interaction, state, DISABLED_MSG)) {
+        if (!(await canProceed(undefined, interaction, state)).result) {
             return;
         }
 

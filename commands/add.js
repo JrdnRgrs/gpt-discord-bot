@@ -1,7 +1,7 @@
 // Requre the necessary discord.js classes
 const { SlashCommandBuilder } = require('discord.js');
-const { disableCheck } = require('../helpers');
-const { DISABLED_MSG } = require('../constants');
+const { canProceed } = require('../helpers');
+const { DISABLED_MSG, UPDATE_PERSONALITY_MSG, UPDATE_PERS_ERROR_MSG, ADDED_PERSONALITY_MSG } = require('../constants');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -14,11 +14,12 @@ module.exports = {
         .addStringOption(option =>
             option.setName('prompt')
                 .setDescription('The prompt for the new personality.')
-                .setRequired(true)),
+                .setRequired(true))
+        .setDMPermission(false),
     async execute(interaction, state) {
         // Commands to execute
         // Check admin/pause state
-        if (!await disableCheck(interaction, state, DISABLED_MSG)) {
+        if (!(await canProceed(undefined, interaction, state)).result) {
             return;
         }
         const name = interaction.options.getString('name');
@@ -34,9 +35,9 @@ module.exports = {
                     "role": "system",
                     "content": `${prompt}`
                 }];
-                await interaction.reply(`Updated the prompt for the existing personality "${name}".`);
+                await interaction.reply(UPDATE_PERSONALITY_MSG.replace("<n>", name));
             } else {
-                await interaction.reply('A personality with this name already exists. Please choose a different name.');
+                await interaction.reply(UPDATE_PERS_ERROR_MSG);
             }
             return;
         }
@@ -51,6 +52,6 @@ module.exports = {
             }]
         });
 
-        await interaction.reply(`New personality "${name}" added.`);
+        await interaction.reply(ADDED_PERSONALITY_MSG.replace("<n>", name));
     },
 };

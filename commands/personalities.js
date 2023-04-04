@@ -1,9 +1,7 @@
 // Requre the necessary discord.js classes
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
-const { disableCheck } = require('../helpers');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { canProceed } = require('../helpers');
 const { PERSONALITY_MSG, DISABLED_MSG } = require('../constants');
-const { EmbedBuilder } = require('discord.js');
-
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -12,7 +10,7 @@ module.exports = {
         .setDescription('List the name of all personalities and their prompts.'),
     async execute(interaction, state) {
         // Check admin/pause state
-        if (!await disableCheck(interaction, state, DISABLED_MSG)) {
+        if (!(await canProceed(undefined, interaction, state)).result) {
             return;
         }
          // Create an embed object

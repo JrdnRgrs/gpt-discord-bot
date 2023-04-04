@@ -125,6 +125,10 @@ const PERSONALITY_MSG = process.env.PERSONALITY_MSG ? process.env.PERSONALITY_MS
 const API_ERROR_MSG = process.env.API_ERROR_MSG ? process.env.BOT_REPLIES : "API request failed.";
 const TOKEN_LIMIT_MSG = process.env.TOKEN_LIMIT_MSG ? process.env.TOKEN_LIMIT_MSG : "Token limit reached. Try again in <m> minutes.";
 const TOKEN_RESET_MSG = process.env.TOKEN_RESET_MSG ? process.env.TOKEN_RESET_MSG : "Token count reset.";
+const ADDED_PERSONALITY_MSG = process.env.ADDED_PERSONALITY_MSG ? process.env.ADDED_PERSONALITY_MSG : "New personality <n> added.";
+const UPDATE_PERSONALITY_MSG = process.env.UPDATE_PERSONALITY_MSG ? process.env.UPDATE_PERSONALITY_MSG : "Updated the prompt for the existing personality \"<n>\".";
+const UPDATE_PERS_ERROR_MSG = process.env.UPDATE_PERS_ERROR_MSG ? process.env.UPDATE_PERS_ERROR_MSG : "A personality with this name already exists. Please choose a different name.";
+const TOKEN_COUNT_MSG = process.env.TOKEN_COUNT_MSG ? process.env.TOKEN_COUNT_MSG : "<t> tokens have been used since <d>.";
 
 // Options
 const CASE_MODE = process.env.CASE_MODE ? process.env.CASE_MODE : "";
@@ -135,6 +139,7 @@ const DISABLED_REPLIES = process.env.DISABLED_REPLIES ? process.env.DISABLED_REP
 const DEFAULT_TTS_SPEAKER = process.env.DEFAULT_TTS_SPEAKER ? process.env.DEFAULT_TTS_SPEAKER : "rocket";
 const TOKEN_RESET_TIME = process.env.TOKEN_RESET_TIME;
 const TOKEN_NUM = process.env.TOKEN_NUM;
+const MSG_LIMIT = process.env.MSG_LIMIT? process.env.MSG_LIMIT : "";
 
 module.exports = {
     voiceMapping,
@@ -164,5 +169,10 @@ module.exports = {
     TOKEN_LIMIT_MSG,
     TOKEN_RESET_MSG,
     TOKEN_RESET_TIME,
-    TOKEN_NUM
+    TOKEN_NUM,
+    MSG_LIMIT,
+    ADDED_PERSONALITY_MSG,
+    UPDATE_PERSONALITY_MSG,
+    UPDATE_PERS_ERROR_MSG,
+    TOKEN_COUNT_MSG
   };

@@ -9,6 +9,8 @@ A GPT powered Discord Bot built with NodeJS.
 * Memory: Bot will remember conversations until restarted or reset.
 * Message splitter for longer messages that exceed 2000 characters
 * TTS: Bot will generate TTS clips from messages using TikTok's TTS api.
+* Token Limiter: Set a token limit to prevent the bot from making API calls after that number, or a time limit.
+* Conversation history truncator: Cuts down conversation history to save tokens (configurable).
 
 ## Dependencies
 * nodejs
@@ -62,7 +64,7 @@ Use the following environment variables to configure certain features:
 - `DEFAULT_TTS_SPEAKER` - Used when no speaker is specified in a TTS command.
 - `TOKEN_RESET_TIME` - Amount of time (in milliseconds) until the token count resets.
 - `TOKEN_NUM` - Amount of maximum completion tokens (doesn't include prompt tokens) that can be used in the time above (applies to all users).
-  - If TOKEN_RESET_TIME or TOKEN_NUM are 0 or not set, token limit will be ignored.
+  - If `TOKEN_RESET_TIME` or `TOKEN_NUM` are 0 or not set, token limit will be ignored.
 
 These env vars are dynamic based on the personality. Use \<p> or \<m> as a placeholder for the dynamic messages:
 - `DYNAMIC_RESET_MSG` - Bot message for single personality reset.
