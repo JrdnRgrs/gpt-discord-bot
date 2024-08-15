@@ -34,6 +34,7 @@ dotenv.config({ path: envFile });
 const commands = [];
 const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js') && !ignoreFiles.includes(file));
+//console.log(commandFiles); // Add this line to see the list of detected command files
 
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`);

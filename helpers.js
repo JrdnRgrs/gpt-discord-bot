@@ -6,6 +6,7 @@ config(SESSION_ID, BASE_URL);
 const { PermissionFlagsBits, EmbedBuilder } = require('discord.js');
 // Require ffmpeg, fs, path, child_process for working with audio files
 const fs = require('fs');
+//const axios = require('axios');
 const path = require('path');
 const ffmpegPath = require('ffmpeg-static');
 const { exec } = require('child_process');
@@ -134,7 +135,10 @@ async function chat(requestX, msg, state, openai){
 		// Make API request
 		const completion = await openai.createChatCompletion({
 			model: modelName,
-			messages: requestX
+			messages: requestX,
+            max_tokens: 2000
+            //presence_penalty: 1.5,
+            //temperature: 1.5
 		});
 
 		// Increase token counter based on user's admin status

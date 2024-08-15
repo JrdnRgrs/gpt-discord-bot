@@ -128,6 +128,7 @@ const TOKEN_RESET_MSG = process.env.TOKEN_RESET_MSG ? process.env.TOKEN_RESET_MS
 const ADDED_PERSONALITY_MSG = process.env.ADDED_PERSONALITY_MSG ? process.env.ADDED_PERSONALITY_MSG : "New personality <n> added.";
 const UPDATE_PERSONALITY_MSG = process.env.UPDATE_PERSONALITY_MSG ? process.env.UPDATE_PERSONALITY_MSG : "Updated the prompt for the existing personality \"<n>\".";
 const UPDATE_PERS_ERROR_MSG = process.env.UPDATE_PERS_ERROR_MSG ? process.env.UPDATE_PERS_ERROR_MSG : "A personality with this name already exists. Please choose a different name.";
+const IMG_DISABLED_MESSAGE = process.env.MSG_LIMIT? process.env.MSG_LIMIT : "Image generation is currently disabled.";
 
 // Options
 const CASE_MODE = process.env.CASE_MODE ? process.env.CASE_MODE : "";
@@ -139,6 +140,7 @@ const DEFAULT_TTS_SPEAKER = process.env.DEFAULT_TTS_SPEAKER ? process.env.DEFAUL
 const TOKEN_RESET_TIME = process.env.TOKEN_RESET_TIME;
 const TOKEN_NUM = process.env.TOKEN_NUM;
 const MSG_LIMIT = process.env.MSG_LIMIT? process.env.MSG_LIMIT : "";
+const IS_IMG_ENABLED = process.env.IS_IMG_ENABLED ? process.env.IS_IMG_ENABLED : "false";
 
 module.exports = {
     voiceMapping,
@@ -172,5 +174,7 @@ module.exports = {
     MSG_LIMIT,
     ADDED_PERSONALITY_MSG,
     UPDATE_PERSONALITY_MSG,
-    UPDATE_PERS_ERROR_MSG
+    UPDATE_PERS_ERROR_MSG,
+    IMG_DISABLED_MESSAGE,
+    IS_IMG_ENABLED
   };

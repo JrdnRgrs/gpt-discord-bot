@@ -16,33 +16,51 @@ module.exports = {
         p = getPersonality(msg.content.toUpperCase(),state);
         // Check if message is a reply if no personality name
         if (p == null && msg.reference?.messageId) {
-            let refMsg = await msg.fetchReference();
-            // Check if the reply is to the bot
-            if (refMsg.author.id === client.user.id) {
-                // Check the personality that the message being replied to is from
-                p = state.personalities.find(pers => pers.request.some(element => (element.content === refMsg.content)));
-            }
-        }
-        if (p == null) return;
+			let refMsg = await msg.fetchReference();
+			if (refMsg.author.id === client.user.id) {
+				p = state.personalities.find(pers => pers.request.some(element => (element.content === refMsg.content)));
+			}
+		}
+		if (p == null) return;
 
-        // Check permissions and tokens
-        const permissionCheckResult = await checkTokens(msg, state);
-        if (!permissionCheckResult.result) {
-            return;
-        }
-        // Check if it is a new month
-        let today = new Date();
-        if (state.startTime.getUTCMonth() !== today.getUTCMonth()) {
-            state.startTime = new Date();
-            state.totalTokenCount = 0;
-        }
-        // Add user message to request
-        p.request.push({"role": "user", "content": `${msg.content}`});
-        // Truncate conversation if # of messages in conversation exceed MSG_LIMIT
-        if (MSG_LIMIT !== "" && p.request.length - 1 > parseInt(MSG_LIMIT, 10)) {
-            let delMsg = (p.request.length - 1) - parseInt(MSG_LIMIT, 10);
-            p.request.splice(1, delMsg);
-        }
+		// Check permissions and tokens
+		const permissionCheckResult = await checkTokens(msg, state);
+		if (!permissionCheckResult.result) {
+			return;
+		}
+
+		// Check if it is a new month
+		let today = new Date();
+		if (state.startTime.getUTCMonth() !== today.getUTCMonth()) {
+			state.startTime = new Date();
+			state.totalTokenCount = 0;
+		}
+
+		// Handle image input
+		let contentWithImage = [];
+		if (msg.attachments.size > 0) {
+			msg.attachments.forEach(attachment => {
+				if (attachment.contentType && attachment.contentType.startsWith('image/')) {
+					contentWithImage.push({
+						"type": "image_url",
+						"image_url": {
+							"url": attachment.proxyURL
+						}
+					});
+				}
+			});
+		}
+
+		// Add user message to the request
+		if (contentWithImage.length > 0) {
+			contentWithImage.unshift({
+				"type": "text",
+				"text": `${msg.content}`
+			});
+			p.request.push({ "role": "user", "content": contentWithImage });
+		} else {
+			p.request.push({ "role": "user", "content": `${msg.content}` });
+		}
         try {
             // Start typing indicator
             msg.channel.sendTyping();
